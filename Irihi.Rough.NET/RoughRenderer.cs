@@ -5,7 +5,7 @@ namespace Irihi.Rough.NET;
 
 public class RoughRenderer : IRoughRenderer
 {
-    public static RoughRenderer Instance { get; } = new RoughRenderer();
+    public static RoughRenderer Instance { get; } = new();
 
     public double RandOffset(double x, ResolvedOptions options)
     {

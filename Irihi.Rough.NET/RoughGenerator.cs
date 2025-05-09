@@ -40,16 +40,18 @@ public class RoughGenerator
     public Drawable Rectangle(double x, double y, double width, double height, Options? options)
     {
         var o = _o(options);
-        var paths = new List<OpSet>();
+        List<OpSet> paths = [];
         var outline = RendererHelper.Rectangle(x, y, width, height, o);
         if (o.Fill is not null && !o.Fill.Value.IsTransparent())
         {
-            var points =
-                new List<PointF> { PointFHelper.Create(x, y), PointFHelper.Create(x + width, y), PointFHelper.Create(x + width, y + height), PointFHelper.Create(x, y + height) };
-            if (o.FillStyle == FillStyle.Solid)
-                paths.Add(RendererHelper.SolidFillPolygon([points], o));
-            else
-                paths.Add(RendererHelper.PatternFillPolygons([points], o));
+            List<PointF> points =
+            [
+                PointFHelper.Create(x, y), PointFHelper.Create(x + width, y),
+                PointFHelper.Create(x + width, y + height), PointFHelper.Create(x, y + height)
+            ];
+            paths.Add(o.FillStyle is FillStyle.Solid
+                ? RendererHelper.SolidFillPolygon([points], o)
+                : RendererHelper.PatternFillPolygons([points], o));
         }
 
         if (!o.Stroke.IsTransparent()) paths.Add(outline);
@@ -59,7 +61,7 @@ public class RoughGenerator
     public Drawable Ellipse(double x, double y, double width, double height, Options? options)
     {
         var o = _o(options);
-        var paths = new List<OpSet>();
+        List<OpSet> paths = [];
         var ellipseParams = RendererHelper.GenerateEllipseParams(width, height, o);
         var ellipseResponse = RendererHelper.EllipseWithParams(x, y, o, ellipseParams);
         if (o.Fill is not null && !o.Fill.Value.IsTransparent())
@@ -97,7 +99,7 @@ public class RoughGenerator
         Options? options)
     {
         var o = _o(options);
-        var paths = new List<OpSet>();
+        List<OpSet> paths = [];
         var outline = RendererHelper.Arc(x, y, width, height, start, stop, closed, true, o);
         if (closed && o.Fill is not null && !o.Fill.Value.IsTransparent())
         {
@@ -122,7 +124,7 @@ public class RoughGenerator
     public Drawable Curve(List<List<PointF>> points, Options? options)
     {
         var o = _o(options);
-        var paths = new List<OpSet>();
+        List<OpSet> paths = [];
         var outline = RendererHelper.Curve(points, o);
         if (o.Fill is not null && !o.Fill.Value.IsTransparent())
         {
@@ -140,7 +142,7 @@ public class RoughGenerator
             }
             else
             {
-                var polyPoints = new List<PointF>();
+                List<PointF> polyPoints = [];
                 var inputPoints = points;
                 if (inputPoints.Count != 0)
                 {
@@ -173,14 +175,13 @@ public class RoughGenerator
     public Drawable Polygon(List<PointF> points, Options options)
     {
         var o = _o(options);
-        var paths = new List<OpSet>();
+        List<OpSet> paths = [];
         var outline = RendererHelper.LinearPath(points, true, o);
         if (o.Fill is not null && !o.Fill.Value.IsTransparent())
         {
-            if (o.FillStyle == FillStyle.Solid)
-                paths.Add(RendererHelper.SolidFillPolygon([points], o));
-            else
-                paths.Add(RendererHelper.PatternFillPolygons([points], o));
+            paths.Add(o.FillStyle is FillStyle.Solid
+                ? RendererHelper.SolidFillPolygon([points], o)
+                : RendererHelper.PatternFillPolygons([points], o));
         }
 
         if (!o.Stroke.IsTransparent()) paths.Add(outline);
@@ -190,7 +191,7 @@ public class RoughGenerator
     public Drawable Path(string? d, Options? options)
     {
         var o = _o(options);
-        var paths = new List<OpSet>();
+        List<OpSet> paths = [];
         if (string.IsNullOrWhiteSpace(d)) return _d(DrawableShape.Path, paths, o);
 
         d = d.Replace("/\n/g", " ").Replace(@"/(-\s)/g", "-").Replace(@"/(\s\s)/g", " ");
@@ -269,7 +270,7 @@ public class RoughGenerator
     {
         var sets = drawable.Sets ?? [];
         var o = drawable.Options ?? _defaultOptions;
-        var paths = new List<PathInfo>();
+        List<PathInfo> paths = [];
         foreach (var drawing in sets)
         {
             PathInfo? path = null;
@@ -321,9 +322,8 @@ public class RoughGenerator
     {
         return input.Where((o, i) =>
         {
-            if (i == 0) return true;
-            if (o.op == OpType.Move) return false;
-            return true;
+            if (i is 0) return true;
+            return o.op is not OpType.Move;
         }).ToList();
     }
 }

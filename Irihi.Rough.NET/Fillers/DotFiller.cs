@@ -16,7 +16,7 @@ public class DotFiller(IRoughRenderer helper) : IPatternFiller
 
     private OpSet DotsOnLines(List<HuskaLine> lines, ResolvedOptions o)
     {
-        var ops = new List<Op>();
+        List<Op> ops = [];
         var gap = o.HachureGap;
         if (gap < 0)
         {
@@ -50,6 +50,6 @@ public class DotFiller(IRoughRenderer helper) : IPatternFiller
             }
         }
 
-        return new OpSet() { Type = OpSetType.FillSketch, Ops = ops };
+        return new OpSet { Type = OpSetType.FillSketch, Ops = ops };
     }
 }

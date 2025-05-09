@@ -20,7 +20,7 @@ public class HachureFiller(IRoughRenderer helper) : IPatternFiller
 
     protected List<Op> RenderLines(List<HuskaLine> lines, ResolvedOptions options)
     {
-        var ops = new List<Op>();
+        List<Op> ops = [];
         foreach (var line in lines)
         {
             var t = helper.DoubleLineOps(line.Start.X, line.Start.Y, line.End.X, line.End.Y, options);

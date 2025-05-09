@@ -6,7 +6,7 @@ public static class AbsolutizeFunctions
     {
         double cx = 0, cy = 0;
         double subx = 0, suby = 0;
-        var output = new List<Segment>();
+        List<Segment> output = [];
 
         foreach (var segment in segments)
         {

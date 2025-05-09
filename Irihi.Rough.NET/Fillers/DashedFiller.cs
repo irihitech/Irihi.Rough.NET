@@ -16,8 +16,8 @@ public class DashedFiller(IRoughRenderer helper) : IPatternFiller
     {
         var offset = o.DashOffset < 0 ? o.HachureGap < 0 ? o.StrokeWidth * 4 : o.HachureGap : o.DashOffset;
         var gap = o.DashGap < 0 ? o.HachureGap < 0 ? o.StrokeWidth * 4 : o.HachureGap : o.DashGap;
-        var ops = new List<Op>();
-        lines.ForEach(line =>
+        List<Op> ops = [];
+        foreach (var line in lines)
         {
             var length = line.Length;
             var count = Math.Floor(length / (offset + gap));
@@ -41,7 +41,8 @@ public class DashedFiller(IRoughRenderer helper) : IPatternFiller
                     p1.Y + lend * Math.Sin(alpha) + startOffset * Math.Sin(alpha));
                 ops.AddRange(helper.DoubleLineOps(start.X, start.Y, end.X, end.Y, o));
             }
-        });
+        }
+
         return ops;
     }
 }

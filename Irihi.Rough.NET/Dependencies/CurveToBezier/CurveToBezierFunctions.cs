@@ -140,8 +140,8 @@ public static class CurveToBezierFunctions
 
             var red = Lerp(r1, r2, t);
 
-            GetPointsOnBezierCurveWithSplitting(new[] { p1, q1, r1, red }, 0, tolerance, outPoints);
-            GetPointsOnBezierCurveWithSplitting(new[] { red, r2, q3, p4 }, 0, tolerance, outPoints);
+            GetPointsOnBezierCurveWithSplitting([p1, q1, r1, red], 0, tolerance, outPoints);
+            GetPointsOnBezierCurveWithSplitting([red, r2, q3, p4], 0, tolerance, outPoints);
         }
 
         return outPoints;
@@ -150,7 +150,7 @@ public static class CurveToBezierFunctions
     public static List<PointF> SimplifyPoints(IReadOnlyList<PointF> points, int start, int end, double epsilon,
         List<PointF>? newPoints = null)
     {
-        var outPoints = newPoints ?? new List<PointF>();
+        var outPoints = newPoints ?? [];
 
         // find the most distance point from the endpoints
         var s = points[start];
@@ -191,7 +191,7 @@ public static class CurveToBezierFunctions
     public static List<PointF> PointsOnBezierCurves(IReadOnlyList<PointF> points, double? tolerance = 0.15,
         double? distance = null)
     {
-        var newPoints = new List<PointF>();
+        List<PointF> newPoints = [];
         var numSegments = (points.Count - 1) / 3;
 
         for (var i = 0; i < numSegments; i++)
@@ -200,7 +200,8 @@ public static class CurveToBezierFunctions
             GetPointsOnBezierCurveWithSplitting(points, offset, tolerance ?? 0.15, newPoints);
         }
 
-        if (distance is > 0) return SimplifyPoints(newPoints, 0, newPoints.Count, distance.Value);
+        if (distance is > 0)
+            return SimplifyPoints(newPoints, 0, newPoints.Count, distance.Value);
 
         return newPoints;
     }

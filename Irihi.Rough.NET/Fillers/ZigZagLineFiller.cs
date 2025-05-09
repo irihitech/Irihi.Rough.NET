@@ -18,7 +18,7 @@ public class ZigZagLineFiller(IRoughRenderer helper) : IPatternFiller
 
     private List<Op> ZigZagLines(List<HuskaLine> lines, double zo, ResolvedOptions o)
     {
-        var ops = new List<Op>();
+        List<Op> ops = [];
         lines.ForEach(line =>
         {
             var length = line.Length;

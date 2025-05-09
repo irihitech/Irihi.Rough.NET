@@ -26,7 +26,7 @@ public static class NormalizeFunctions
         double[]? recursive = null)
     {
         var angleRad = DegToRad(angle);
-        var curves = new List<double[]>();
+        List<double[]> curves = [];
 
         double f1, f2, cx, cy;
         if (recursive != null)
@@ -90,7 +90,7 @@ public static class NormalizeFunctions
             x2 = cx + r1 * Math.Cos(f2);
             y2 = cy + r2 * Math.Sin(f2);
 
-            curves = ArcToCubicCurves(x2, y2, x2old, y2old, r1, r2, angle, 0, sweepFlag, new[] { f2, f2old, cx, cy });
+            curves = ArcToCubicCurves(x2, y2, x2old, y2old, r1, r2, angle, 0, sweepFlag, [f2, f2old, cx, cy]);
         }
 
         df = f2 - f1;
@@ -103,10 +103,10 @@ public static class NormalizeFunctions
         var hx = 4.0 / 3.0 * r1 * t;
         var hy = 4.0 / 3.0 * r2 * t;
 
-        var m1 = new[] { x1, y1 };
-        var m2 = new[] { x1 + hx * s1, y1 - hy * c1 };
-        var m3 = new[] { x2 + hx * s2, y2 - hy * c2 };
-        var m4 = new[] { x2, y2 };
+        double[] m1 = [x1, y1];
+        double[] m2 = [x1 + hx * s1, y1 - hy * c1];
+        double[] m3 = [x2 + hx * s2, y2 - hy * c2];
+        double[] m4 = [x2, y2];
 
         m2[0] = 2 * m1[0] - m2[0];
         m2[1] = 2 * m1[1] - m2[1];
@@ -119,7 +119,7 @@ public static class NormalizeFunctions
 
         curves = new List<double[]> { m2, m3, m4 }.Concat(curves).ToList();
 
-        var result = new List<double[]>();
+        List<double[]> result = [];
         for (var i = 0; i < curves.Count; i += 3)
         {
             var (r1x, r1y) = Rotate(curves[i][0], curves[i][1], angleRad);
@@ -139,7 +139,7 @@ public static class NormalizeFunctions
     // Normalize path to include only M, L, C, and Z commands
     public static List<Segment> Normalize(this List<Segment> segments)
     {
-        var output = new List<Segment>();
+        List<Segment> output = [];
 
         var lastType = '\0';
         double cx = 0, cy = 0;
@@ -234,7 +234,7 @@ public static class NormalizeFunctions
                     else if (cx != ax || cy != ay)
                     {
                         var curves = ArcToCubicCurves(cx, cy, ax, ay, r1, r2, angle, largeArcFlag, sweepFlag);
-                        foreach (var curve in curves) output.Add(new Segment('C', curve));
+                        output.AddRange(curves.Select(curve => new Segment('C', curve)));
                         (cx, cy) = (ax, ay);
                     }
 

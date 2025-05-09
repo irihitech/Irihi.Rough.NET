@@ -41,18 +41,18 @@ public static class HachureFillFunctions
     internal static List<HuskaLine> StraightHachureLines(IList<List<PointF>> polygons, double gap,
         double hachureStepOffset)
     {
-        var vertexArray = new List<List<PointF>>();
+        List<List<PointF>> vertexArray = [];
         foreach (var polygon in polygons)
         {
-            var vertices = new List<PointF>(polygon);
+            List<PointF> vertices = [..polygon];
             if (vertices[0] != vertices[^1]) vertices.Add(vertices[0]);
             if (vertices.Count > 2) vertexArray.Add(vertices);
         }
 
-        var lines = new List<HuskaLine>();
+        List<HuskaLine> lines = [];
         gap = Math.Max(gap, 0.1);
 
-        var edges = new List<EdgeEntry>();
+        List<EdgeEntry> edges = [];
 
         foreach (var vertices in vertexArray)
         {
@@ -89,7 +89,7 @@ public static class HachureFillFunctions
         if (edges.Count == 0) return lines;
 
         // Start Scanning
-        var activeEdges = new List<ActiveEdgeEntry>();
+        List<ActiveEdgeEntry> activeEdges = [];
         var y = edges[0].YMin;
         var iteration = 0;
         while (activeEdges.Count > 0 || edges.Count > 0)
@@ -104,7 +104,7 @@ public static class HachureFillFunctions
                 }
 
                 var removed = edges[..(ix + 1)].ToList();
-                foreach (var edge in removed) activeEdges.Add(new ActiveEdgeEntry { S = y, Edge = edge });
+                activeEdges.AddRange(removed.Select(edge => new ActiveEdgeEntry { S = y, Edge = edge }));
                 edges.RemoveRange(0, ix + 1);
             }
 

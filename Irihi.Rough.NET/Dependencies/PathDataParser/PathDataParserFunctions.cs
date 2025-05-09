@@ -25,7 +25,7 @@ public static class PathDataParserFunctions
 
     internal static List<PathToken> Tokenize(string d)
     {
-        var tokens = new List<PathToken>();
+        List<PathToken> tokens = [];
         var span = d.AsSpan();
 
         while (span.Length > 0)
@@ -35,7 +35,7 @@ public static class PathDataParserFunctions
                 foreach (var match in RegexHelper.WhiteSpaceRegex().EnumerateMatches(span))
                 {
                     if (match.Length == 0) continue;
-                    span = span.Slice(match.Length);
+                    span = span[match.Length..];
                     break;
                 }
             }
@@ -45,7 +45,7 @@ public static class PathDataParserFunctions
                 {
                     if (match.Length == 0) continue;
                     tokens.Add(new PathToken(TokenType.Command, span.Slice(match.Index, match.Length).ToString()));
-                    span = span.Slice(match.Length);
+                    span = span[match.Length..];
                     break;
                 }
             }
@@ -55,13 +55,13 @@ public static class PathDataParserFunctions
                 {
                     if (match.Length == 0) continue;
                     tokens.Add(new PathToken(TokenType.Number, span.Slice(match.Index, match.Length).ToString()));
-                    span = span.Slice(match.Length);
+                    span = span[match.Length..];
                     break;
                 }
             }
             else
             {
-                return new List<PathToken>();
+                return [];
             }
         }
 
@@ -71,7 +71,7 @@ public static class PathDataParserFunctions
 
     public static List<Segment> ParsePath(string d)
     {
-        var segments = new List<Segment>();
+        List<Segment> segments = [];
         var tokens = Tokenize(d);
         var mode = "BOD";
         var index = 0;
@@ -80,11 +80,11 @@ public static class PathDataParserFunctions
         {
             var token = tokens[index];
             int paramsCount = 0;
-            var parameters = new List<double>();
+            List<double> parameters = [];
 
             if (mode == "BOD")
             {
-                if (token.Text == "M" || token.Text == "m")
+                if (token.Text is "M" or "m")
                 {
                     index++;
                     paramsCount = CommandParameters[char.ToUpper(token.Text[0])];
@@ -106,7 +106,7 @@ public static class PathDataParserFunctions
                 mode = token.Text;
             }
 
-            if ((index + paramsCount) < tokens.Count)
+            if (index + paramsCount < tokens.Count)
             {
                 for (var i = index; i < index + paramsCount; i++)
                 {
@@ -148,7 +148,7 @@ public static class PathDataParserFunctions
 
     public static string Serialize(List<Segment> segments)
     {
-        var tokens = new List<string>();
+        List<string> tokens = [];
         foreach (var segment in segments)
         {
             tokens.Add(segment.Key.ToString());

@@ -46,7 +46,7 @@ public static class RendererHelper
         var midDispY = o.Bowing * o.MaxRandomnessOffset * (x1 - x2) / 200;
         midDispX = OffsetOpt(midDispX, o, roughnessGain);
         midDispY = OffsetOpt(midDispY, o, roughnessGain);
-        var ops = new List<Op>();
+        List<Op> ops = [];
         var preserveVertices = o.PreserveVertices;
         if (move)
         {
@@ -128,7 +128,7 @@ public static class RendererHelper
         var len = points.Count;
         if (len > 2)
         {
-            var ops = new List<Op>();
+            List<Op> ops = [];
             for (var i = 0; i < len - 1; i++)
                 ops.AddRange(DoubleLine(points[i].X, points[i].Y, points[i + 1].X, points[i + 1].Y, o));
             if (close) ops.AddRange(DoubleLine(points[len - 1].X, points[len - 1].Y, points[0].X, points[0].Y, o));
@@ -148,13 +148,13 @@ public static class RendererHelper
 
     public static OpSet Rectangle(double x, double y, double width, double height, ResolvedOptions o)
     {
-        var points = new List<PointF>
-        {
+        List<PointF> points =
+        [
             PointFHelper.Create(x, y),
             PointFHelper.Create(x + width, y),
             PointFHelper.Create(x + width, y + height),
             PointFHelper.Create(x, y + height)
-        };
+        ];
         return Polygon(points, o);
     }
 
@@ -200,11 +200,11 @@ public static class RendererHelper
     private static List<Op> CurveWithOffset(List<PointF> points, double offset, ResolvedOptions o)
     {
         if (points.Count == 0) return [];
-        var ps = new List<PointF>
-        {
+        List<PointF> ps =
+        [
             PointFHelper.Create(points[0].X + OffsetOpt(offset, o), points[0].Y + OffsetOpt(offset, o)),
             PointFHelper.Create(points[0].X + OffsetOpt(offset, o), points[0].Y + OffsetOpt(offset, o))
-        };
+        ];
         for (var i = 1; i < points.Count; i++)
         {
             ps.Add(PointFHelper.Create(points[i].X + OffsetOpt(offset, o), points[i].Y + OffsetOpt(offset, o)));
@@ -218,10 +218,10 @@ public static class RendererHelper
     private static List<Op> Curve(List<PointF> points, PointF? closePoint, ResolvedOptions o)
     {
         var len = points.Count;
-        var ops = new List<Op>();
+        List<Op> ops = [];
         if (len > 3)
         {
-            var b = new List<PointF> { new(), new(), new(), new() };
+            List<PointF> b = [new(), new(), new(), new()];
             var s = 1 - o.CurveTightness;
             ops.Add(new Op { op = OpType.Move, Data = [points[1].X, points[1].Y] });
             for (var i = 1; i + 2 < len; i++)
@@ -318,8 +318,8 @@ public static class RendererHelper
         double ry, double offset, double overlap, ResolvedOptions o)
     {
         var coreOnly = o.Roughness == 0;
-        var corePoints = new List<PointF>();
-        var allPoints = new List<PointF>();
+        List<PointF> corePoints = [];
+        List<PointF> allPoints = [];
 
         if (coreOnly)
         {
@@ -354,7 +354,8 @@ public static class RendererHelper
                 OffsetOpt(offset, o) + cy + ry * Math.Sin(radOffset + Math.PI * 2 + overlap * 0.5)));
             allPoints.Add(PointFHelper.Create(OffsetOpt(offset, o) + cx + 0.98 * rx * Math.Cos(radOffset + overlap),
                 OffsetOpt(offset, o) + cy + 0.98 * ry * Math.Sin(radOffset + overlap)));
-            allPoints.Add(PointFHelper.Create(OffsetOpt(offset, o) + cx + 0.9 * rx * Math.Cos(radOffset + overlap * 0.5),
+            allPoints.Add(PointFHelper.Create(
+                OffsetOpt(offset, o) + cx + 0.9 * rx * Math.Cos(radOffset + overlap * 0.5),
                 OffsetOpt(offset, o) + cy + 0.9 * ry * Math.Sin(radOffset + overlap * 0.5)));
         }
 
@@ -422,14 +423,16 @@ public static class RendererHelper
         double offset, ResolvedOptions o)
     {
         var radOffset = strt + OffsetOpt(0.1, o);
-        var points = new List<PointF>
-        {
-            PointFHelper.Create(OffsetOpt(offset, o) + cx + 0.9 * rx * Math.Cos(radOffset - increment),
+        List<PointF> points =
+        [
+            PointFHelper.Create(
+                OffsetOpt(offset, o) + cx + 0.9 * rx * Math.Cos(radOffset - increment),
                 OffsetOpt(offset, o) + cy + 0.9 * ry * Math.Sin(radOffset - increment))
-        };
+        ];
         for (var angle = radOffset; angle <= stp; angle = angle + increment)
         {
-            points.Add(PointFHelper.Create(OffsetOpt(offset, o) + cx + rx * Math.Cos(angle),
+            points.Add(PointFHelper.Create(
+                OffsetOpt(offset, o) + cx + rx * Math.Cos(angle),
                 OffsetOpt(offset, o) + cy + ry * Math.Sin(angle)));
         }
 
@@ -440,15 +443,12 @@ public static class RendererHelper
 
     public static OpSet SvgPath(string path, ResolvedOptions o)
     {
-        var segments =
-            PathDataParserFunctions.ParsePath(path).Absolutize().Normalize();
-        var ops = new List<Op>();
+        var segments = PathDataParserFunctions.ParsePath(path).Absolutize().Normalize();
+        List<Op> ops = [];
         var first = PointFHelper.Create(0, 0);
         var current = PointFHelper.Create(0, 0);
-        foreach (var segment in segments)
+        foreach (var (key, data) in segments)
         {
-            var key = segment.Key;
-            var data = segment.Data;
             switch (key)
             {
                 case 'M':
@@ -481,8 +481,8 @@ public static class RendererHelper
     private static List<Op> BezierTo(double x1, double y1, double x2, double y2, double x, double y, PointF current,
         ResolvedOptions o)
     {
-        var ops = new List<Op>();
-        var ros = new[] { o.MaxRandomnessOffset, o.MaxRandomnessOffset + 0.3 };
+        List<Op> ops = [];
+        double[] ros = [o.MaxRandomnessOffset, o.MaxRandomnessOffset + 0.3];
         var iterations = o.DisableMultiStroke ? 1 : 2;
         var preserveVertices = o.PreserveVertices;
         for (var i = 0; i < iterations; i++)
@@ -519,7 +519,7 @@ public static class RendererHelper
 
     public static OpSet SolidFillPolygon(List<List<PointF>> polygonList, ResolvedOptions o)
     {
-        var ops = new List<Op>();
+        List<Op> ops = [];
         foreach (var points in polygonList)
         {
             if (points.Count == 0) continue;
@@ -573,7 +573,7 @@ public static class RendererHelper
         }
 
         var increment = (stp - strt) / o.CurveStepCount;
-        var points = new List<PointF>();
+        List<PointF> points = [];
         for (var angle = strt; angle <= stp; angle = angle + increment)
             points.Add(PointFHelper.Create(cx + rx * Math.Cos(angle), cy + ry * Math.Sin(angle)));
         points.Add(PointFHelper.Create(cx + rx * Math.Cos(stp), cy + ry * Math.Sin(stp)));

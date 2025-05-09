@@ -12,10 +12,10 @@ public class PointsOnPathFunctions
         var segments = PathDataParserFunctions.ParsePath(path);
         var normalized = segments.Absolutize().Normalize();
 
-        var sets = new List<List<PointF>>();
-        var currentPoints = new List<PointF>();
+        List<List<PointF>> sets = [];
+        List<PointF> currentPoints = [];
         var start = new PointF(0, 0);
-        var pendingCurve = new List<PointF>();
+        List<PointF> pendingCurve = [];
 
         foreach (var (key, data) in normalized)
         {
@@ -52,7 +52,7 @@ public class PointsOnPathFunctions
 
         if (distance != 0) return sets;
 
-        var result = new List<List<PointF>>();
+        List<List<PointF>> result = [];
         foreach (var set in sets)
         {
             var simplifiedSet = CurveToBezierFunctions.Simplify(set, distance ?? 1);
