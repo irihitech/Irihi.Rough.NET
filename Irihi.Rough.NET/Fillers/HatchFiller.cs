@@ -5,7 +5,7 @@ namespace Irihi.Rough.NET.Fillers;
 
 public class HatchFiller(IRoughRenderer helper) : HachureFiller(helper)
 {
-    public override OpSet FillPolygons(List<List<Point>> polygonList, ResolvedOptions options)
+    public override OpSet FillPolygons(List<List<PointF>> polygonList, ResolvedOptions options)
     {
         var set = FillPolygonsInternal(polygonList, options);
         var o2 = options with { };

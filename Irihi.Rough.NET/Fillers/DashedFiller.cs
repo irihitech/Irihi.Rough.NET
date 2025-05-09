@@ -6,7 +6,7 @@ namespace Irihi.Rough.NET.Fillers;
 
 public class DashedFiller(IRoughRenderer helper) : IPatternFiller
 {
-    public OpSet FillPolygons(List<List<Point>> polygonList, ResolvedOptions options)
+    public OpSet FillPolygons(List<List<PointF>> polygonList, ResolvedOptions options)
     {
         var lines = RoughHelpers.PolygonHachureLines(polygonList, options);
         return new OpSet { Type = OpSetType.FillSketch, Ops = DashedLine(lines, options) };
@@ -35,9 +35,9 @@ public class DashedFiller(IRoughRenderer helper) : IPatternFiller
             {
                 var lstart = i * (offset + gap);
                 var lend = lstart + offset;
-                var start = new Point(p1.X + lstart * Math.Cos(alpha) + startOffset * Math.Cos(alpha),
+                var start = PointFHelper.Create(p1.X + lstart * Math.Cos(alpha) + startOffset * Math.Cos(alpha),
                     p1.Y + lstart * Math.Sin(alpha) + startOffset * Math.Sin(alpha));
-                var end = new Point(p1.X + lend * Math.Cos(alpha) + startOffset * Math.Cos(alpha),
+                var end = PointFHelper.Create(p1.X + lend * Math.Cos(alpha) + startOffset * Math.Cos(alpha),
                     p1.Y + lend * Math.Sin(alpha) + startOffset * Math.Sin(alpha));
                 ops.AddRange(helper.DoubleLineOps(start.X, start.Y, end.X, end.Y, o));
             }

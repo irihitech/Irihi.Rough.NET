@@ -1,11 +1,12 @@
 using System.Drawing;
 using Irihi.Rough.NET.DataModels;
+using Irihi.Rough.NET.Helpers;
 
 namespace Irihi.Rough.NET.Dependencies.HachureFill;
 
 public static class HachureFillFunctions
 {
-    internal static void RotatePoints(IList<Point> points, Point center, double degree)
+    internal static void RotatePoints(IList<PointF> points, PointF center, double degree)
     {
         var (cx, cy) = (center.X, center.Y);
         var angle = Math.PI / 180.0 * degree;
@@ -15,11 +16,11 @@ public static class HachureFillFunctions
         {
             var p = points[index];
             var (x, y) = (p.X, p.Y);
-            points[index] = new Point((x - cx) * cos - (y - cy) * sin + cx, (x - cx) * sin + (y - cy) * cos + cy);
+            points[index] = PointFHelper.Create((x - cx) * cos - (y - cy) * sin + cx, (x - cx) * sin + (y - cy) * cos + cy);
         }
     }
 
-    internal static void RotateLines(IList<HuskaLine> lines, Point center, double degree)
+    internal static void RotateLines(IList<HuskaLine> lines, PointF center, double degree)
     {
         var (cx, cy) = (center.X, center.Y);
         var angle = Math.PI / 180.0 * degree;
@@ -31,19 +32,19 @@ public static class HachureFillFunctions
             var (x1, y1) = (line.Start.X, line.Start.Y);
             var (x2, y2) = (line.End.X, line.End.Y);
             lines[i] = new HuskaLine(
-                new Point((x1 - cx) * cos - (y1 - cy) * sin + cx, (x1 - cx) * sin + (y1 - cy) * cos + cy),
-                new Point((x2 - cx) * cos - (y2 - cy) * sin + cx, (x2 - cx) * sin + (y2 - cy) * cos + cy)
+                PointFHelper.Create((x1 - cx) * cos - (y1 - cy) * sin + cx, (x1 - cx) * sin + (y1 - cy) * cos + cy),
+                PointFHelper.Create((x2 - cx) * cos - (y2 - cy) * sin + cx, (x2 - cx) * sin + (y2 - cy) * cos + cy)
             );
         }
     }
 
-    internal static List<HuskaLine> StraightHachureLines(IList<List<Point>> polygons, double gap,
+    internal static List<HuskaLine> StraightHachureLines(IList<List<PointF>> polygons, double gap,
         double hachureStepOffset)
     {
-        var vertexArray = new List<List<Point>>();
+        var vertexArray = new List<List<PointF>>();
         foreach (var polygon in polygons)
         {
-            var vertices = new List<Point>(polygon);
+            var vertices = new List<PointF>(polygon);
             if (vertices[0] != vertices[^1]) vertices.Add(vertices[0]);
             if (vertices.Count > 2) vertexArray.Add(vertices);
         }
@@ -126,7 +127,7 @@ public static class HachureFillFunctions
                         if (next >= activeEdges.Count) break;
                         var ce = activeEdges[i].Edge;
                         var ne = activeEdges[next].Edge;
-                        lines.Add(new HuskaLine(new Point(Math.Round(ce.X), y), new Point(Math.Round(ne.X), y)));
+                        lines.Add(new HuskaLine(PointFHelper.Create(Math.Round(ce.X), y), PointFHelper.Create(Math.Round(ne.X), y)));
                     }
 
             y += hachureStepOffset;
@@ -143,13 +144,13 @@ public static class HachureFillFunctions
         return lines;
     }
 
-    internal static List<HuskaLine> HachureLines(IList<List<Point>> polygons, double hachureGap,
+    internal static List<HuskaLine> HachureLines(IList<List<PointF>> polygons, double hachureGap,
         double hachureAngle,
         double hachureStepOffset = 1)
     {
         var angle = hachureAngle;
         var gap = Math.Max(hachureGap, 0.1);
-        var rotationCenter = new Point(0, 0);
+        var rotationCenter = new PointF(0, 0);
         if (angle != 0)
             foreach (var polygon in polygons)
                 RotatePoints(polygon, rotationCenter, angle);

@@ -6,7 +6,7 @@ namespace Irihi.Rough.NET.Fillers;
 
 public class ZigZagFiller(IRoughRenderer helper) : HachureFiller(helper)
 {
-    public override OpSet FillPolygons(List<List<Point>> polygonList, ResolvedOptions o)
+    public override OpSet FillPolygons(List<List<PointF>> polygonList, ResolvedOptions o)
     {
         var gap = o.HachureGap;
         if (gap < 0) gap = o.StrokeWidth * 4;
@@ -26,12 +26,12 @@ public class ZigZagFiller(IRoughRenderer helper) : HachureFiller(helper)
             {
                 zigzagLines.Add(new HuskaLine
                 {
-                    Start = new Point(p1.X - dgx, p1.Y + dgy),
+                    Start = PointFHelper.Create(p1.X - dgx, p1.Y + dgy),
                     End = p2
                 });
                 zigzagLines.Add(new HuskaLine
                 {
-                    Start = new Point(p1.X + dgx, p1.Y - dgy),
+                    Start = PointFHelper.Create(p1.X + dgx, p1.Y - dgy),
                     End = p2
                 });
             }

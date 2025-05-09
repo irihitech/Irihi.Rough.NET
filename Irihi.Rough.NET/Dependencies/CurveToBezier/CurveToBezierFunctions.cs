@@ -6,12 +6,12 @@ namespace Irihi.Rough.NET.Dependencies.CurveToBezier;
 
 public static class CurveToBezierFunctions
 {
-    public static List<Point> CurveToBezier(IReadOnlyList<Point> pointsIn, double curveTightness = 0)
+    public static List<PointF> CurveToBezier(IReadOnlyList<PointF> pointsIn, double curveTightness = 0)
     {
         var len = pointsIn.Count;
         if (len < 3) throw new ArgumentException("A curve must have at least three points.");
 
-        var output = new List<Point>();
+        List<PointF> output = [];
 
         if (len == 3)
         {
@@ -22,11 +22,11 @@ public static class CurveToBezierFunctions
         }
         else
         {
-            var points = new List<Point>
-            {
+            List<PointF> points =
+            [
                 pointsIn[0],
                 pointsIn[0]
-            };
+            ];
 
             for (var i = 1; i < pointsIn.Count; i++)
             {
@@ -34,23 +34,23 @@ public static class CurveToBezierFunctions
                 if (i == pointsIn.Count - 1) points.Add(pointsIn[i]);
             }
 
-            Span<Point> b = stackalloc Point[4];
+            Span<PointF> b = stackalloc PointF[4];
             var s = 1 - curveTightness;
             output.Add(points[0].Clone());
 
             for (var i = 1; i + 2 < points.Count; i++)
             {
                 var cachedVert = points[i];
-                b[0] = new Point(cachedVert.X, cachedVert.Y);
-                b[1] = new Point(
+                b[0] = new PointF(cachedVert.X, cachedVert.Y);
+                b[1] = PointFHelper.Create(
                     cachedVert.X + (s * points[i + 1].X - s * points[i - 1].X) / 6,
                     cachedVert.Y + (s * points[i + 1].Y - s * points[i - 1].Y) / 6
                 );
-                b[2] = new Point(
+                b[2] = PointFHelper.Create(
                     points[i + 1].X + (s * points[i].X - s * points[i + 2].X) / 6,
                     points[i + 1].Y + (s * points[i].Y - s * points[i + 2].Y) / 6
                 );
-                b[3] = new Point(points[i + 1].X, points[i + 1].Y);
+                b[3] = new PointF(points[i + 1].X, points[i + 1].Y);
 
                 output.Add(b[1]);
                 output.Add(b[2]);
@@ -63,24 +63,24 @@ public static class CurveToBezierFunctions
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
-    internal static Point Lerp(Point a, Point b, double t)
+    internal static PointF Lerp(PointF a, PointF b, double t)
     {
-        return new Point(a.X + (b.X - a.X) * t, a.Y + (b.Y - a.Y) * t);
+        return PointFHelper.Create(a.X + (b.X - a.X) * t, a.Y + (b.Y - a.Y) * t);
     }
 
-    internal static double DistanceToSegmentSquared(Point p, Point v, Point w)
+    internal static double DistanceToSegmentSquared(PointF p, PointF v, PointF w)
     {
-        var l2 = PointHelper.DistanceSquared(v, w);
-        if (l2 == 0) return PointHelper.DistanceSquared(p, v);
+        var l2 = PointFHelper.DistanceSquared(v, w);
+        if (l2 == 0) return PointFHelper.DistanceSquared(p, v);
 
         var t = ((p.X - v.X) * (w.X - v.X) + (p.Y - v.Y) * (w.Y - v.Y)) / l2;
         t = Math.Max(0, Math.Min(1, t));
         // t = Math.Clamp(t, 0, 1);
-        return PointHelper.DistanceSquared(p, Lerp(v, w, t));
+        return PointFHelper.DistanceSquared(p, Lerp(v, w, t));
     }
 
     // Adapted from https://seant23.wordpress.com/2010/11/12/offset-bezier-curves/
-    internal static double Flatness(IReadOnlyList<Point> points, int offset)
+    internal static double Flatness(IReadOnlyList<PointF> points, int offset)
     {
         var p1 = points[offset + 0];
         var p2 = points[offset + 1];
@@ -104,16 +104,16 @@ public static class CurveToBezierFunctions
         return ux + uy;
     }
 
-    internal static List<Point> GetPointsOnBezierCurveWithSplitting(IReadOnlyList<Point> points, int offset,
-        double tolerance, List<Point>? newPoints = null)
+    internal static List<PointF> GetPointsOnBezierCurveWithSplitting(IReadOnlyList<PointF> points, int offset,
+        double tolerance, List<PointF>? newPoints = null)
     {
-        var outPoints = newPoints ?? new List<Point>();
+        var outPoints = newPoints ?? [];
         if (Flatness(points, offset) < tolerance)
         {
             var p0 = points[offset + 0];
             if (outPoints.Count > 0)
             {
-                var d = PointHelper.Distance(outPoints[^1], p0);
+                var d = PointFHelper.Distance(outPoints[^1], p0);
                 if (d > 1) outPoints.Add(p0);
             }
             else
@@ -147,10 +147,10 @@ public static class CurveToBezierFunctions
         return outPoints;
     }
 
-    public static List<Point> SimplifyPoints(IReadOnlyList<Point> points, int start, int end, double epsilon,
-        List<Point>? newPoints = null)
+    public static List<PointF> SimplifyPoints(IReadOnlyList<PointF> points, int start, int end, double epsilon,
+        List<PointF>? newPoints = null)
     {
-        var outPoints = newPoints ?? new List<Point>();
+        var outPoints = newPoints ?? new List<PointF>();
 
         // find the most distance point from the endpoints
         var s = points[start];
@@ -183,15 +183,15 @@ public static class CurveToBezierFunctions
         return outPoints;
     }
 
-    public static List<Point> Simplify(IReadOnlyList<Point> points, double distance)
+    public static List<PointF> Simplify(IReadOnlyList<PointF> points, double distance)
     {
         return SimplifyPoints(points, 0, points.Count, distance);
     }
 
-    public static List<Point> PointsOnBezierCurves(IReadOnlyList<Point> points, double? tolerance = 0.15,
+    public static List<PointF> PointsOnBezierCurves(IReadOnlyList<PointF> points, double? tolerance = 0.15,
         double? distance = null)
     {
-        var newPoints = new List<Point>();
+        var newPoints = new List<PointF>();
         var numSegments = (points.Count - 1) / 3;
 
         for (var i = 0; i < numSegments; i++)

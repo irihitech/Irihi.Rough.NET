@@ -45,7 +45,7 @@ public class RoughGenerator
         if (o.Fill is not null && !o.Fill.Value.IsTransparent())
         {
             var points =
-                new List<Point> { new(x, y), new(x + width, y), new(x + width, y + height), new(x, y + height) };
+                new List<PointF> { PointFHelper.Create(x, y), PointFHelper.Create(x + width, y), PointFHelper.Create(x + width, y + height), PointFHelper.Create(x, y + height) };
             if (o.FillStyle == FillStyle.Solid)
                 paths.Add(RendererHelper.SolidFillPolygon([points], o));
             else
@@ -87,7 +87,7 @@ public class RoughGenerator
         return result;
     }
 
-    public Drawable LinearPath(List<Point> points, Options? options)
+    public Drawable LinearPath(List<PointF> points, Options? options)
     {
         var o = _o(options);
         return _d(DrawableShape.LinearPath, [RendererHelper.LinearPath(points, false, o)], o);
@@ -119,7 +119,7 @@ public class RoughGenerator
         return _d(DrawableShape.Arc, paths, o);
     }
 
-    public Drawable Curve(List<List<Point>> points, Options? options)
+    public Drawable Curve(List<List<PointF>> points, Options? options)
     {
         var o = _o(options);
         var paths = new List<OpSet>();
@@ -140,7 +140,7 @@ public class RoughGenerator
             }
             else
             {
-                var polyPoints = new List<Point>();
+                var polyPoints = new List<PointF>();
                 var inputPoints = points;
                 if (inputPoints.Count != 0)
                 {
@@ -170,7 +170,7 @@ public class RoughGenerator
         return _d(DrawableShape.Curve, paths, o);
     }
 
-    public Drawable Polygon(List<Point> points, Options options)
+    public Drawable Polygon(List<PointF> points, Options options)
     {
         var o = _o(options);
         var paths = new List<OpSet>();

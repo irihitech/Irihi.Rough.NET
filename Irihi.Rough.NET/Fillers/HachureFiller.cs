@@ -6,12 +6,12 @@ namespace Irihi.Rough.NET.Fillers;
 
 public class HachureFiller(IRoughRenderer helper) : IPatternFiller
 {
-    public virtual OpSet FillPolygons(List<List<Point>> polygonList, ResolvedOptions options)
+    public virtual OpSet FillPolygons(List<List<PointF>> polygonList, ResolvedOptions options)
     {
         return FillPolygonsInternal(polygonList, options);
     }
 
-    protected OpSet FillPolygonsInternal(List<List<Point>> polygonList, ResolvedOptions options)
+    protected OpSet FillPolygonsInternal(List<List<PointF>> polygonList, ResolvedOptions options)
     {
         var lines = RoughHelpers.PolygonHachureLines(polygonList, options);
         var ops = RenderLines(lines, options);

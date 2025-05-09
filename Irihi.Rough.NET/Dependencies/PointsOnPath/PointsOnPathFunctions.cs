@@ -1,20 +1,21 @@
 using System.Drawing;
 using Irihi.Rough.NET.Dependencies.CurveToBezier;
 using Irihi.Rough.NET.Dependencies.PathDataParser;
+using Irihi.Rough.NET.Helpers;
 
 namespace Irihi.Rough.NET.Dependencies.PointsOnPath;
 
 public class PointsOnPathFunctions
 {
-    public static List<List<Point>> PointsOnPath(string path, double? tolerance, double? distance)
+    public static List<List<PointF>> PointsOnPath(string path, double? tolerance, double? distance)
     {
         var segments = PathDataParserFunctions.ParsePath(path);
         var normalized = segments.Absolutize().Normalize();
 
-        var sets = new List<List<Point>>();
-        var currentPoints = new List<Point>();
-        var start = new Point(0, 0);
-        var pendingCurve = new List<Point>();
+        var sets = new List<List<PointF>>();
+        var currentPoints = new List<PointF>();
+        var start = new PointF(0, 0);
+        var pendingCurve = new List<PointF>();
 
         foreach (var (key, data) in normalized)
         {
@@ -22,12 +23,12 @@ public class PointsOnPathFunctions
             {
                 case 'M':
                     AppendPendingPoints();
-                    start = new Point(data[0], data[1]);
+                    start = PointFHelper.Create(data[0], data[1]);
                     currentPoints.Add(start);
                     break;
                 case 'L':
                     AppendPendingCurve();
-                    currentPoints.Add(new Point(data[0], data[1]));
+                    currentPoints.Add(PointFHelper.Create(data[0], data[1]));
                     break;
                 case 'C':
                     if (pendingCurve.Count == 0)
@@ -36,9 +37,9 @@ public class PointsOnPathFunctions
                         pendingCurve.Add(lastPoint.Clone());
                     }
 
-                    pendingCurve.Add(new Point(data[0], data[1]));
-                    pendingCurve.Add(new Point(data[2], data[3]));
-                    pendingCurve.Add(new Point(data[4], data[5]));
+                    pendingCurve.Add(PointFHelper.Create(data[0], data[1]));
+                    pendingCurve.Add(PointFHelper.Create(data[2], data[3]));
+                    pendingCurve.Add(PointFHelper.Create(data[4], data[5]));
                     break;
                 case 'Z':
                     AppendPendingCurve();
@@ -51,7 +52,7 @@ public class PointsOnPathFunctions
 
         if (distance != 0) return sets;
 
-        var result = new List<List<Point>>();
+        var result = new List<List<PointF>>();
         foreach (var set in sets)
         {
             var simplifiedSet = CurveToBezierFunctions.Simplify(set, distance ?? 1);

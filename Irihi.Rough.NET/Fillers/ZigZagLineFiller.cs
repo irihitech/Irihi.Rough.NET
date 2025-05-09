@@ -6,7 +6,7 @@ namespace Irihi.Rough.NET.Fillers;
 
 public class ZigZagLineFiller(IRoughRenderer helper) : IPatternFiller
 {
-    public OpSet FillPolygons(List<List<Point>> polygonList, ResolvedOptions o)
+    public OpSet FillPolygons(List<List<PointF>> polygonList, ResolvedOptions o)
     {
         var gap = o.HachureGap < 0 ? o.StrokeWidth * 4 : o.HachureGap;
         var zo = o.ZigzagOffset < 0 ? gap : o.ZigzagOffset;
@@ -37,9 +37,9 @@ public class ZigZagLineFiller(IRoughRenderer helper) : IPatternFiller
                 var lstart = i * 2 * zo;
                 var lend = (i + 1) * 2 * zo;
                 var dz = Math.Sqrt(2 * Math.Pow(zo, 2));
-                var start = new Point(p1.X + lstart * Math.Cos(alpha), p1.Y + lstart * Math.Sin(alpha));
-                var end = new Point(p1.X + lend * Math.Cos(alpha), p1.Y + lend * Math.Sin(alpha));
-                var middle = new Point(start.X + dz * Math.Cos(alpha + Math.PI / 4),
+                var start = PointFHelper.Create(p1.X + lstart * Math.Cos(alpha), p1.Y + lstart * Math.Sin(alpha));
+                var end = PointFHelper.Create(p1.X + lend * Math.Cos(alpha), p1.Y + lend * Math.Sin(alpha));
+                var middle = PointFHelper.Create(start.X + dz * Math.Cos(alpha + Math.PI / 4),
                     start.Y + dz * Math.Sin(alpha + Math.PI / 4));
                 ops.AddRange(helper.DoubleLineOps(start.X, start.Y, middle.X, middle.Y, o));
                 ops.AddRange(helper.DoubleLineOps(middle.X, middle.Y, end.X, end.Y, o));

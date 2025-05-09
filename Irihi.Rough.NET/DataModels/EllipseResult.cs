@@ -5,7 +5,7 @@ namespace Irihi.Rough.NET.DataModels;
 internal class EllipseResult
 {
     public OpSet OpSet { get; set; }
-    public List<Point> Points { get; set; } = [];
+    public List<PointF> Points { get; set; } = [];
 }
 
 public struct EllipseParams

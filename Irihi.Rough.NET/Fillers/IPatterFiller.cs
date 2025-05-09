@@ -5,5 +5,5 @@ namespace Irihi.Rough.NET.Fillers;
 
 public interface IPatternFiller
 {
-    public OpSet FillPolygons(List<List<Point>> polygonList, ResolvedOptions options);
+    public OpSet FillPolygons(List<List<PointF>> polygonList, ResolvedOptions options);
 }
