@@ -2,7 +2,6 @@ using System.Drawing;
 
 namespace Irihi.Rough.NET.DataModels;
 
-[Obsolete]
 public class PathInfo
 {
     public string D { get; set; } = string.Empty;

@@ -240,7 +240,6 @@ public class RoughGenerator
         return _d(DrawableShape.Path, paths, o);
     }
 
-    [Obsolete]
     public string OpsToPath(OpSet drawing, double? fixedDecimals = null)
     {
         var sb = new StringBuilder();
@@ -266,7 +265,6 @@ public class RoughGenerator
         return sb.ToString().Trim();
     }
 
-    [Obsolete("Try not to serialize to string. ")]
     public List<PathInfo> ToPaths(Drawable drawable)
     {
         var sets = drawable.Sets ?? [];
@@ -306,7 +304,6 @@ public class RoughGenerator
         return paths;
     }
 
-    [Obsolete]
     private PathInfo FillSketch(OpSet drawing, ResolvedOptions o)
     {
         var fweight = o.FillWeight;
