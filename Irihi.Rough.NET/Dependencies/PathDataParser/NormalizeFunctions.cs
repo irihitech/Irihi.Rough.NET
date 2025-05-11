@@ -5,20 +5,34 @@ namespace Irihi.Rough.NET.Dependencies.PathDataParser;
 
 public static class NormalizeFunctions
 {
-    [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
-    public static double DegToRad(double degrees)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static double DegToRad(double degrees)
     {
         return Math.PI * degrees / 180.0;
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
-    public static (double X, double Y) Rotate(double x, double y, double angleRad)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static (double X, double Y) Rotate(double x, double y, double angleRad)
     {
         var localX = x * Math.Cos(angleRad) - y * Math.Sin(angleRad);
         var localY = x * Math.Sin(angleRad) + y * Math.Cos(angleRad);
         return (localX, localY);
     }
 
+    /// <summary>
+    ///  Converts an elliptical arc to cubic Bezier curves.
+    /// </summary>
+    /// <param name="x1"> The x-coordinate of the start point of the arc.</param>
+    /// <param name="y1"> The y-coordinate of the start point of the arc.</param>
+    /// <param name="x2"> The x-coordinate of the end point of the arc.</param>
+    /// <param name="y2"> The y-coordinate of the end point of the arc.</param>
+    /// <param name="r1"> The x-radius of the ellipse.</param>
+    /// <param name="r2"> The y-radius of the ellipse.</param>
+    /// <param name="angle"> The rotation angle of the ellipse in degrees.</param>
+    /// <param name="largeArcFlag"> Indicates whether the arc is large (1) or small (0).</param>
+    /// <param name="sweepFlag"> Indicates the direction of the arc (1 for positive-angle, 0 for negative-angle).</param>
+    /// <param name="recursive"> Optional parameter for recursive calls.</param>
+    /// <returns></returns>
     public static List<double[]> ArcToCubicCurves(
         double x1, double y1, double x2, double y2,
         double r1, double r2, double angle,
@@ -131,12 +145,21 @@ public static class NormalizeFunctions
         return result;
     }
 
+    /// <summary>
+    ///  Converts a string to a double using InvariantCulture.
+    /// </summary>
+    /// <param name="s"> The string to convert.</param>
+    /// <returns> The converted double value.</returns>
     public static double ToDouble(this string s)
     {
         return double.Parse(s, CultureInfo.InvariantCulture);
     }
 
-    // Normalize path to include only M, L, C, and Z commands
+    /// <summary>
+    ///  Normalize path to include only M, L, C, and Z commands
+    /// </summary>
+    /// <param name="segments"> The list of segments to normalize.</param>
+    /// <returns> The normalized list of segments.</returns>
     public static List<Segment> Normalize(this List<Segment> segments)
     {
         List<Segment> output = [];

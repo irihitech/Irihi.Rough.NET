@@ -1,5 +1,8 @@
 namespace Irihi.Rough.NET.DataModels;
 
+/// <summary>
+///  Represents the different shape categories that can be drawn.
+/// </summary>
 public enum DrawableShape
 {
     Line,

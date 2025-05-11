@@ -5,8 +5,15 @@ using Irihi.Rough.NET.Helpers;
 
 namespace Irihi.Rough.NET.Dependencies.PointsOnPath;
 
-public class PointsOnPathFunctions
+public static class PointsOnPathFunctions
 {
+    /// <summary>
+    ///  Gets the points on a path.
+    /// </summary>
+    /// <param name="path"> The path string to parse.</param>
+    /// <param name="tolerance"> The tolerance for the points on the path.</param>
+    /// <param name="distance"> The distance for the points on the path.</param>
+    /// <returns></returns>
     public static List<List<PointF>> PointsOnPath(string path, double? tolerance, double? distance)
     {
         var segments = PathDataParserFunctions.ParsePath(path);

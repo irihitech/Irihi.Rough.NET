@@ -6,6 +6,15 @@ namespace Irihi.Rough.NET.Helpers;
 
 public static class RendererHelper
 {
+    /// <summary>
+    ///  Creates a line operation set.
+    /// </summary>
+    /// <param name="x1"> The x-coordinate of the first point. </param>
+    /// <param name="y1"> The y-coordinate of the first point. </param>
+    /// <param name="x2"> The x-coordinate of the second point. </param>
+    /// <param name="y2"></param>
+    /// <param name="options"></param>
+    /// <returns> An operation set representing the line. </returns>
     public static OpSet Line(double x1, double y1, double x2, double y2, ResolvedOptions options)
     {
         return new OpSet { Type = OpSetType.Path, Ops = DoubleLine(x1, y1, x2, y2, options) };
@@ -20,8 +29,8 @@ public static class RendererHelper
         var o2 = Line(x1, y1, x2, y2, o, true, true);
         return o1.Concat(o2).ToList();
     }
-
-    public static List<Op> DoubleLineFillOps(double x1, double y1, double x2, double y2, ResolvedOptions options)
+    
+    internal static List<Op> DoubleLineFillOps(double x1, double y1, double x2, double y2, ResolvedOptions options)
     {
         return DoubleLine(x1, y1, x2, y2, options);
     }
@@ -123,6 +132,13 @@ public static class RendererHelper
         return ops.Roughness * roughnessGain * (MathHelper.Random(ops) * (max - min) + min);
     }
 
+    /// <summary>
+    ///  Creates a linear path operation set.
+    /// </summary>
+    /// <param name="points"> The list of points to create the path from. </param>
+    /// <param name="close"> Whether to close the path. </param>
+    /// <param name="o"> The options for the path. </param>
+    /// <returns> An operation set representing the linear path. </returns>
     public static OpSet LinearPath(List<PointF> points, bool close, ResolvedOptions o)
     {
         var len = points.Count;
@@ -141,11 +157,26 @@ public static class RendererHelper
         return new OpSet { Type = OpSetType.Path, Ops = [] };
     }
 
+    /// <summary>
+    ///  Creates a polygon operation set.
+    /// </summary>
+    /// <param name="points"> The list of points to create the polygon from. </param>
+    /// <param name="o"> The options for the polygon. </param>
+    /// <returns> An operation set representing the polygon. </returns>
     public static OpSet Polygon(List<PointF> points, ResolvedOptions o)
     {
         return LinearPath(points, true, o);
     }
 
+    /// <summary>
+    ///  Creates a rectangle operation set.
+    /// </summary>
+    /// <param name="x"> The x-coordinate of the top-left corner. </param>
+    /// <param name="y"> The y-coordinate of the top-left corner. </param>
+    /// <param name="width"> The width of the rectangle. </param>
+    /// <param name="height"> The height of the rectangle. </param>
+    /// <param name="o"> The options for the rectangle. </param>
+    /// <returns> An operation set representing the rectangle. </returns>
     public static OpSet Rectangle(double x, double y, double width, double height, ResolvedOptions o)
     {
         List<PointF> points =
@@ -158,6 +189,12 @@ public static class RendererHelper
         return Polygon(points, o);
     }
 
+    /// <summary>
+    ///  Creates a curve operation set.
+    /// </summary>
+    /// <param name="inputPoints"> The list of points to create the curve from. </param>
+    /// <param name="o"> The options for the curve. </param>
+    /// <returns> An operation set representing the curve. </returns>
     public static OpSet Curve(List<List<PointF>> inputPoints, ResolvedOptions o)
     {
         if (inputPoints.Count != 0)
@@ -272,6 +309,15 @@ public static class RendererHelper
         return opt;
     }
 
+    /// <summary>
+    ///  Creates an ellipse operation set.
+    /// </summary>
+    /// <param name="x"> The x-coordinate of the center. </param>
+    /// <param name="y"> The y-coordinate of the center. </param>
+    /// <param name="width"> The width of the ellipse. </param>
+    /// <param name="height"> The height of the ellipse. </param>
+    /// <param name="o"> The options for the ellipse. </param>
+    /// <returns> An operation set representing the ellipse. </returns>
     public static OpSet Ellipse(double x, double y, double width, double height, ResolvedOptions o)
     {
         var @params = GenerateEllipseParams(width, height, o);
@@ -362,6 +408,19 @@ public static class RendererHelper
         return [allPoints, corePoints];
     }
 
+    /// <summary>
+    ///  Creates an arc operation set.
+    /// </summary>
+    /// <param name="x"> The x-coordinate of the center. </param>
+    /// <param name="y"> The y-coordinate of the center. </param>
+    /// <param name="width"> The width of the arc. </param>
+    /// <param name="height"> The height of the arc. </param>
+    /// <param name="start"> The starting angle of the arc in radians. </param>
+    /// <param name="stop"> The ending angle of the arc in radians. </param>
+    /// <param name="closed"> Whether to close the arc. </param>
+    /// <param name="roughClosure"> Whether to add a rough closure to the arc. </param>
+    /// <param name="o"> The options for the arc. </param>
+    /// <returns> An operation set representing the arc. </returns>
     public static OpSet Arc(double x, double y, double width, double height, double start, double stop,
         bool closed, bool roughClosure, ResolvedOptions o)
     {
@@ -441,6 +500,12 @@ public static class RendererHelper
         return Curve(points, null, o);
     }
 
+    /// <summary>
+    ///  Creates a path operation set from an SVG path string.
+    /// </summary>
+    /// <param name="path"> The SVG path string. </param>
+    /// <param name="o"> The options for the path. </param>
+    /// <returns></returns>
     public static OpSet SvgPath(string path, ResolvedOptions o)
     {
         var segments = PathDataParserFunctions.ParsePath(path).Absolutize().Normalize();
@@ -517,6 +582,12 @@ public static class RendererHelper
         return ops;
     }
 
+    /// <summary>
+    ///  Creates a solid fill polygon operation set.
+    /// </summary>
+    /// <param name="polygonList"> The list of polygons to fill. </param>
+    /// <param name="o"> The options for the fill. </param>
+    /// <returns> An operation set representing the solid fill of polygon. </returns>
     public static OpSet SolidFillPolygon(List<List<PointF>> polygonList, ResolvedOptions o)
     {
         List<Op> ops = [];
@@ -544,11 +615,28 @@ public static class RendererHelper
         return new OpSet { Type = OpSetType.FillPath, Ops = ops };
     }
 
+    /// <summary>
+    ///  Creates a pattern fill polygon operation set.
+    /// </summary>
+    /// <param name="polygonList"> The list of polygons to fill. </param>
+    /// <param name="o"> The options for the fill. </param>
+    /// <returns> An operation set representing the pattern fill of polygon. </returns>
     public static OpSet PatternFillPolygons(List<List<PointF>> polygonList, ResolvedOptions o)
     {
         return RoughHelpers.GetFiller(o, RoughRenderer.Instance).FillPolygons(polygonList, o);
     }
 
+    /// <summary>
+    ///  Creates a pattern fill arc operation set.
+    /// </summary>
+    /// <param name="x"> The x-coordinate of the center. </param>
+    /// <param name="y"> The y-coordinate of the center. </param>
+    /// <param name="width"> The width of the arc. </param>
+    /// <param name="height"> The height of the arc. </param>
+    /// <param name="start"> The starting angle of the arc in radians. </param>
+    /// <param name="stop"> The ending angle of the arc in radians. </param>
+    /// <param name="o"> The options for the fill. </param>
+    /// <returns> An operation set representing the pattern fill of arc. </returns>
     public static OpSet PatternFillArc(double x, double y, double width, double height, double start, double stop,
         ResolvedOptions o)
     {

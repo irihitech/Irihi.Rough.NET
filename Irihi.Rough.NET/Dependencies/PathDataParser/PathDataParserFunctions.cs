@@ -23,7 +23,7 @@ public static class PathDataParserFunctions
         { 'Q', 4 }, { 'S', 4 }, { 'T', 2 }, { 'V', 1 }, { 'Z', 0 }
     };
 
-    internal static List<PathToken> Tokenize(string d)
+    private static List<PathToken> Tokenize(string d)
     {
         List<PathToken> tokens = [];
         var span = d.AsSpan();
@@ -69,6 +69,12 @@ public static class PathDataParserFunctions
         return tokens;
     }
 
+    /// <summary>
+    ///  Parses a path string into a list of segments.
+    /// </summary>
+    /// <param name="d"> The path string to parse. </param>
+    /// <returns> A list of segments representing the parsed path. </returns>
+    /// <exception cref="Exception"> Thrown when the path string is invalid or contains unexpected characters. </exception>
     public static List<Segment> ParsePath(string d)
     {
         List<Segment> segments = [];
@@ -146,6 +152,11 @@ public static class PathDataParserFunctions
         return segments;
     }
 
+    /// <summary>
+    ///  Serializes a list of segments into a path string.
+    /// </summary>
+    /// <param name="segments"> The list of segments to serialize. </param>
+    /// <returns> A string representing the serialized path. </returns>
     public static string Serialize(List<Segment> segments)
     {
         List<string> tokens = [];
@@ -194,4 +205,9 @@ internal record struct PathToken(TokenType Type, string Text)
     public static PathToken End => new(TokenType.Eod, string.Empty);
 }
 
+/// <summary>
+///  Represents a segment of a path.
+/// </summary>
+/// <param name="Key"> The command character of the segment. </param>
+/// <param name="Data"> The parameters of the segment. </param>
 public record struct Segment(char Key, double[] Data);

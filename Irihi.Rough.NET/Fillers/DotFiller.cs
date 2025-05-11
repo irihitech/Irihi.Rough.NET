@@ -4,8 +4,13 @@ using Irihi.Rough.NET.Helpers;
 
 namespace Irihi.Rough.NET.Fillers;
 
+/// <summary>
+///  Fills polygons with dots.
+/// </summary>
+/// <param name="helper"></param>
 public class DotFiller(IRoughRenderer helper) : IPatternFiller
 {
+    /// <inheritdoc/>
     public OpSet FillPolygons(List<List<PointF>> polygonList, ResolvedOptions options)
     {
         var o = options with { };

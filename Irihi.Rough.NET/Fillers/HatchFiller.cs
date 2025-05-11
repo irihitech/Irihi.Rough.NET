@@ -3,8 +3,13 @@ using Irihi.Rough.NET.DataModels;
 
 namespace Irihi.Rough.NET.Fillers;
 
+/// <summary>
+///  Fills polygons with Cross-hatching.
+/// </summary>
+/// <param name="helper"></param>
 public class HatchFiller(IRoughRenderer helper) : HachureFiller(helper)
 {
+    /// <inheritdoc/>
     public override OpSet FillPolygons(List<List<PointF>> polygonList, ResolvedOptions options)
     {
         var set = FillPolygonsInternal(polygonList, options);

@@ -1,1 +1,0 @@
-namespace Irihi.Rough.NET.DataModels;

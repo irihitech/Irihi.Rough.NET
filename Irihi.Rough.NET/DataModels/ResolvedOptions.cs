@@ -2,6 +2,9 @@ using System.Drawing;
 
 namespace Irihi.Rough.NET.DataModels;
 
+/// <summary>
+///  Represents the options for drawing shapes that is resolved to ensure correct values.
+/// </summary>
 public record ResolvedOptions : Options
 {
     public new double MaxRandomnessOffset { get; set; }

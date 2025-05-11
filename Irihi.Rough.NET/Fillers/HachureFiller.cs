@@ -4,8 +4,13 @@ using Irihi.Rough.NET.Helpers;
 
 namespace Irihi.Rough.NET.Fillers;
 
+/// <summary>
+///  Fill the polygons with hachure lines.
+/// </summary>
+/// <param name="helper"></param>
 public class HachureFiller(IRoughRenderer helper) : IPatternFiller
 {
+    /// <inheritdoc/>
     public virtual OpSet FillPolygons(List<List<PointF>> polygonList, ResolvedOptions options)
     {
         return FillPolygonsInternal(polygonList, options);

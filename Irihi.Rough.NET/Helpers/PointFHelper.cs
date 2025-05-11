@@ -5,7 +5,7 @@ namespace Irihi.Rough.NET.Helpers;
 
 public static class PointFHelper
 {
-    [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static PointF Clone(this PointF p)
     {
         return new PointF(p.X, p.Y);

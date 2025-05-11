@@ -7,10 +7,17 @@ using Irihi.Rough.NET.Helpers;
 
 namespace Irihi.Rough.NET;
 
+/// <summary>
+///  Represents a generator for creating rough drawings.
+/// </summary>
 public class RoughGenerator
 {
     private readonly ResolvedOptions _defaultOptions;
 
+    /// <summary>
+    ///  Initializes a new instance of the <see cref="RoughGenerator"/> class with the specified default options.
+    /// </summary>
+    /// <param name="defaultOptions"></param>
     public RoughGenerator(ResolvedOptions defaultOptions)
     {
         _defaultOptions = defaultOptions;
@@ -31,12 +38,30 @@ public class RoughGenerator
         };
     }
 
+    /// <summary>
+    ///  Create a drawing of a line between two points.
+    /// </summary>
+    /// <param name="x1"> The x-coordinate of the start point of the line.</param>
+    /// <param name="y1"> The y-coordinate of the start point of the line.</param>
+    /// <param name="x2"> The x-coordinate of the end point of the line.</param>
+    /// <param name="y2"> The y-coordinate of the end point of the line.</param>
+    /// <param name="options"> The options to use for the line.</param>
+    /// <returns> A <see cref="Drawable"/> object representing the line.</returns>
     public Drawable Line(double x1, double y1, double x2, double y2, Options? options)
     {
         var o = _o(options);
         return _d(DrawableShape.Line, [RendererHelper.Line(x1, y1, x2, y2, o)], o);
     }
 
+    /// <summary>
+    /// Creates a drawable representation of a rectangle with optional styling.
+    /// </summary>
+    /// <param name="x">The x-coordinate of the top-left corner of the rectangle.</param>
+    /// <param name="y">The y-coordinate of the top-left corner of the rectangle.</param>
+    /// <param name="width">The width of the rectangle.</param>
+    /// <param name="height">The height of the rectangle.</param>
+    /// <param name="options">Optional styling options for the rectangle, such as fill and stroke.</param>
+    /// <returns>A <see cref="Drawable"/> object representing the rectangle.</returns>
     public Drawable Rectangle(double x, double y, double width, double height, Options? options)
     {
         var o = _o(options);
@@ -58,6 +83,15 @@ public class RoughGenerator
         return _d(DrawableShape.Rectangle, paths, o);
     }
 
+    /// <summary>
+    /// Creates a drawable representation of an ellipse with optional styling.
+    /// </summary>
+    /// <param name="x">The x-coordinate of the center of the ellipse.</param>
+    /// <param name="y">The y-coordinate of the center of the ellipse.</param>
+    /// <param name="width">The width of the ellipse.</param>
+    /// <param name="height">The height of the ellipse.</param>
+    /// <param name="options">Optional styling options for the ellipse, such as fill and stroke.</param>
+    /// <returns>A <see cref="Drawable"/> object representing the ellipse.</returns>
     public Drawable Ellipse(double x, double y, double width, double height, Options? options)
     {
         var o = _o(options);
@@ -82,6 +116,14 @@ public class RoughGenerator
         return _d(DrawableShape.Ellipse, paths, o);
     }
 
+    /// <summary>
+    /// Creates a drawable representation of a circle with optional styling.
+    /// </summary>
+    /// <param name="x">The x-coordinate of the center of the circle.</param>
+    /// <param name="y">The y-coordinate of the center of the circle.</param>
+    /// <param name="diameter">The diameter of the circle.</param>
+    /// <param name="options">Optional styling options for the circle, such as fill and stroke.</param>
+    /// <returns>A <see cref="Drawable"/> object representing the circle.</returns>
     public Drawable Circle(double x, double y, double diameter, Options? options)
     {
         var result = Ellipse(x, y, diameter, diameter, options);
@@ -89,12 +131,30 @@ public class RoughGenerator
         return result;
     }
 
+    /// <summary>
+    /// Creates a drawable representation of a linear path connecting a series of points with optional styling.
+    /// </summary>
+    /// <param name="points">A list of points that define the linear path.</param>
+    /// <param name="options">Optional styling options for the linear path, such as stroke and fill.</param>
+    /// <returns>A <see cref="Drawable"/> object representing the linear path.</returns>
     public Drawable LinearPath(List<PointF> points, Options? options)
     {
         var o = _o(options);
         return _d(DrawableShape.LinearPath, [RendererHelper.LinearPath(points, false, o)], o);
     }
 
+    /// <summary>
+    /// Creates a drawable representation of an arc with optional styling.
+    /// </summary>
+    /// <param name="x">The x-coordinate of the center of the arc.</param>
+    /// <param name="y">The y-coordinate of the center of the arc.</param>
+    /// <param name="width">The width of the arc's bounding box.</param>
+    /// <param name="height">The height of the arc's bounding box.</param>
+    /// <param name="start">The starting angle of the arc, in radians.</param>
+    /// <param name="stop">The ending angle of the arc, in radians.</param>
+    /// <param name="closed">Indicates whether the arc should be closed (forming a pie shape).</param>
+    /// <param name="options">Optional styling options for the arc, such as fill and stroke.</param>
+    /// <returns>A <see cref="Drawable"/> object representing the arc.</returns>
     public Drawable Arc(double x, double y, double width, double height, double start, double stop, bool closed,
         Options? options)
     {
@@ -121,6 +181,12 @@ public class RoughGenerator
         return _d(DrawableShape.Arc, paths, o);
     }
 
+    /// <summary>
+    /// Creates a drawable representation of a curve with optional styling.
+    /// </summary>
+    /// <param name="points">A list of lists of points that define the curve.</param>
+    /// <param name="options">Optional styling options for the curve, such as fill and stroke.</param>
+    /// <returns>A <see cref="Drawable"/> object representing the curve.</returns>
     public Drawable Curve(List<List<PointF>> points, Options? options)
     {
         var o = _o(options);
@@ -172,6 +238,12 @@ public class RoughGenerator
         return _d(DrawableShape.Curve, paths, o);
     }
 
+    /// <summary>
+    /// Creates a drawable representation of a polygon with optional styling.
+    /// </summary>
+    /// <param name="points">A list of points that define the vertices of the polygon.</param>
+    /// <param name="options">Optional styling options for the polygon, such as fill and stroke.</param>
+    /// <returns>A <see cref="Drawable"/> object representing the polygon.</returns>
     public Drawable Polygon(List<PointF> points, Options options)
     {
         var o = _o(options);
@@ -188,6 +260,12 @@ public class RoughGenerator
         return _d(DrawableShape.Polygon, paths, o);
     }
 
+    /// <summary>
+    /// Creates a drawable representation of an SVG path with optional styling.
+    /// </summary>
+    /// <param name="d">The SVG path data string that defines the shape.</param>
+    /// <param name="options">Optional styling options for the path, such as fill and stroke.</param>
+    /// <returns>A <see cref="Drawable"/> object representing the SVG path.</returns>
     public Drawable Path(string? d, Options? options)
     {
         var o = _o(options);
@@ -241,6 +319,12 @@ public class RoughGenerator
         return _d(DrawableShape.Path, paths, o);
     }
 
+    /// <summary>
+    ///  Converts a set of operations to a path string.
+    /// </summary>
+    /// <param name="drawing"> The set of operations to convert.</param>
+    /// <param name="fixedDecimals"> The number of decimal places to use for formatting the coordinates.</param>
+    /// <returns></returns>
     public string OpsToPath(OpSet drawing, double? fixedDecimals = null)
     {
         var sb = new StringBuilder();
@@ -266,6 +350,11 @@ public class RoughGenerator
         return sb.ToString().Trim();
     }
 
+    /// <summary>
+    ///  Converts a drawable object to a list of path information.
+    /// </summary>
+    /// <param name="drawable"> The drawable object to convert.</param>
+    /// <returns> A list of <see cref="PathInfo"/> objects representing the paths.</returns>
     public List<PathInfo> ToPaths(Drawable drawable)
     {
         var sets = drawable.Sets ?? [];

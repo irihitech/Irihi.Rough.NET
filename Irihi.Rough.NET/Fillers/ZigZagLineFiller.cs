@@ -4,8 +4,13 @@ using Irihi.Rough.NET.Helpers;
 
 namespace Irihi.Rough.NET.Fillers;
 
+/// <summary>
+///  Fills polygons with zigzag lines.
+/// </summary>
+/// <param name="helper"></param>
 public class ZigZagLineFiller(IRoughRenderer helper) : IPatternFiller
 {
+    /// <inheritdoc/>
     public OpSet FillPolygons(List<List<PointF>> polygonList, ResolvedOptions o)
     {
         var gap = o.HachureGap < 0 ? o.StrokeWidth * 4 : o.HachureGap;

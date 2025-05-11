@@ -4,8 +4,13 @@ using Irihi.Rough.NET.Helpers;
 
 namespace Irihi.Rough.NET.Fillers;
 
+/// <summary>
+///  Fill the polygon with dashed lines.
+/// </summary>
+/// <param name="helper"></param>
 public class DashedFiller(IRoughRenderer helper) : IPatternFiller
 {
+    /// <inheritdoc/>
     public OpSet FillPolygons(List<List<PointF>> polygonList, ResolvedOptions options)
     {
         var lines = RoughHelpers.PolygonHachureLines(polygonList, options);

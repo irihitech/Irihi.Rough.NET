@@ -4,8 +4,18 @@ using Irihi.Rough.NET.Helpers;
 
 namespace Irihi.Rough.NET.Dependencies.CurveToBezier;
 
+/// <summary>
+///  Converts a curve defined by a list of points into a Bezier curve.
+/// </summary>
 public static class CurveToBezierFunctions
 {
+    /// <summary>
+    ///  Converts a curve defined by a list of points into a Bezier curve.
+    /// </summary>
+    /// <param name="pointsIn">The input points defining the curve.</param>
+    /// <param name="curveTightness">The tightness of the curve. A value of 0 results in a straight line, while a value of 1 results in a very tight curve.</param>
+    /// <returns>A list of points representing the Bezier curve.</returns>
+    /// <exception cref="ArgumentException">Thrown when the input points count is less than 3.</exception>
     public static List<PointF> CurveToBezier(IReadOnlyList<PointF> pointsIn, double curveTightness = 0)
     {
         var len = pointsIn.Count;
@@ -61,14 +71,27 @@ public static class CurveToBezierFunctions
         return output;
     }
 
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
-    internal static PointF Lerp(PointF a, PointF b, double t)
+    /// <summary>
+    ///  Interpolates between two points a and b by a factor t.
+    /// </summary>
+    /// <param name="a">The first point.</param>
+    /// <param name="b">The second point.</param>
+    /// <param name="t">The interpolation factor. A value of 0 returns point a, while a value of 1 returns point b.</param>
+    /// <returns> The interpolated point.</returns>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static PointF Lerp(PointF a, PointF b, double t)
     {
         return PointFHelper.Create(a.X + (b.X - a.X) * t, a.Y + (b.Y - a.Y) * t);
     }
 
-    internal static double DistanceToSegmentSquared(PointF p, PointF v, PointF w)
+    /// <summary>
+    ///  Calculates the squared distance from a point p to a line segment defined by points v and w.
+    /// </summary>
+    /// <param name="p">The point to calculate the distance from.</param>
+    /// <param name="v">The start point of the line segment.</param>
+    /// <param name="w">The end point of the line segment.</param>
+    /// <returns> The squared distance from point p to the line segment vw.</returns>
+    private static double DistanceToSegmentSquared(PointF p, PointF v, PointF w)
     {
         var l2 = PointFHelper.DistanceSquared(v, w);
         if (l2 == 0) return PointFHelper.DistanceSquared(p, v);
@@ -79,6 +102,12 @@ public static class CurveToBezierFunctions
         return PointFHelper.DistanceSquared(p, Lerp(v, w, t));
     }
 
+    /// <summary>
+    ///  Calculates the flatness of a Bezier curve defined by four control points.
+    /// </summary>
+    /// <param name="points">the control points of the Bezier curve.</param>
+    /// <param name="offset">The offset to the first control point.</param>
+    /// <returns> The flatness of the Bezier curve.</returns>
     // Adapted from https://seant23.wordpress.com/2010/11/12/offset-bezier-curves/
     internal static double Flatness(IReadOnlyList<PointF> points, int offset)
     {
@@ -104,7 +133,15 @@ public static class CurveToBezierFunctions
         return ux + uy;
     }
 
-    internal static List<PointF> GetPointsOnBezierCurveWithSplitting(IReadOnlyList<PointF> points, int offset,
+    /// <summary>
+    ///  Get the points on a Bézier curve that is split into segments.
+    /// </summary>
+    /// <param name="points">The control points of the Bézier curve.</param>
+    /// <param name="offset">The offset to the first control point.</param>
+    /// <param name="tolerance">The tolerance for flatness. If the flatness is less than this value, the curve is considered flat.</param>
+    /// <param name="newPoints">The list of new points to add to. If null, a new list will be created.</param>
+    /// <returns></returns>
+    private static List<PointF> GetPointsOnBezierCurveWithSplitting(IReadOnlyList<PointF> points, int offset,
         double tolerance, List<PointF>? newPoints = null)
     {
         var outPoints = newPoints ?? [];
@@ -147,6 +184,15 @@ public static class CurveToBezierFunctions
         return outPoints;
     }
 
+    /// <summary>
+    ///  Simplifies a list of points. This is a recursive function that splits the points into smaller segments
+    /// </summary>
+    /// <param name="points">The list of points to simplify.</param>
+    /// <param name="start">The starting index of the points to simplify.</param>
+    /// <param name="end">The ending index of the points to simplify.</param>
+    /// <param name="epsilon">The maximum distance from the line segment to the point.</param>
+    /// <param name="newPoints">The list of new points to add to. If null, a new list will be created.</param>
+    /// <returns></returns>
     public static List<PointF> SimplifyPoints(IReadOnlyList<PointF> points, int start, int end, double epsilon,
         List<PointF>? newPoints = null)
     {
@@ -183,11 +229,24 @@ public static class CurveToBezierFunctions
         return outPoints;
     }
 
+    /// <summary>
+    ///  Simplifies a list of points. 
+    /// </summary>
+    /// <param name="points">The list of points to simplify.</param>
+    /// <param name="distance">The maximum distance from the line segment to the point.</param>
+    /// <returns></returns>
     public static List<PointF> Simplify(IReadOnlyList<PointF> points, double distance)
     {
         return SimplifyPoints(points, 0, points.Count, distance);
     }
 
+    /// <summary>
+    ///  Calculates the points on a Bézier curve defined by a list of control points.
+    /// </summary>
+    /// <param name="points"> The control points of the Bézier curve.</param>
+    /// <param name="tolerance"> The tolerance for flatness. If the flatness is less than this value, the curve is considered flat.</param>
+    /// <param name="distance"> The maximum distance from the line segment to the point.</param>
+    /// <returns> A list of points representing the Bézier curve.</returns>
     public static List<PointF> PointsOnBezierCurves(IReadOnlyList<PointF> points, double? tolerance = 0.15,
         double? distance = null)
     {

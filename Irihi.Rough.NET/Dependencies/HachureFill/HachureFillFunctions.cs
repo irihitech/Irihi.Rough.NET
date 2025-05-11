@@ -6,7 +6,7 @@ namespace Irihi.Rough.NET.Dependencies.HachureFill;
 
 public static class HachureFillFunctions
 {
-    internal static void RotatePoints(IList<PointF> points, PointF center, double degree)
+    private static void RotatePoints(IList<PointF> points, PointF center, double degree)
     {
         var (cx, cy) = (center.X, center.Y);
         var angle = Math.PI / 180.0 * degree;
@@ -19,8 +19,8 @@ public static class HachureFillFunctions
             points[index] = PointFHelper.Create((x - cx) * cos - (y - cy) * sin + cx, (x - cx) * sin + (y - cy) * cos + cy);
         }
     }
-
-    internal static void RotateLines(IList<HuskaLine> lines, PointF center, double degree)
+    
+    private static void RotateLines(IList<HuskaLine> lines, PointF center, double degree)
     {
         var (cx, cy) = (center.X, center.Y);
         var angle = Math.PI / 180.0 * degree;
@@ -38,7 +38,7 @@ public static class HachureFillFunctions
         }
     }
 
-    internal static List<HuskaLine> StraightHachureLines(IList<List<PointF>> polygons, double gap,
+    private static List<HuskaLine> StraightHachureLines(IList<List<PointF>> polygons, double gap,
         double hachureStepOffset)
     {
         List<List<PointF>> vertexArray = [];

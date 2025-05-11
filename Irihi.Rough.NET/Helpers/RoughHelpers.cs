@@ -9,6 +9,12 @@ public static class RoughHelpers
 {
     private static readonly Dictionary<FillStyle, IPatternFiller> Fillers = new(12);
 
+    /// <summary>
+    ///  Gets the appropriate pattern filler based on the fill style and renderer.
+    /// </summary>
+    /// <param name="options">
+    /// <param name="renderer"></param>
+    /// <returns></returns>
     public static IPatternFiller GetFiller(ResolvedOptions options, IRoughRenderer renderer)
     {
         if (Fillers.TryGetValue(options.FillStyle, out var filler)) return filler;
@@ -24,7 +30,7 @@ public static class RoughHelpers
         };
         return Fillers[options.FillStyle];
     }
-
+    
     internal static List<HuskaLine> PolygonHachureLines(List<List<PointF>> polygonList, ResolvedOptions o)
     {
         var angle = o.HachureAngle + 90;

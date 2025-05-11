@@ -2,6 +2,11 @@ namespace Irihi.Rough.NET.Dependencies.PathDataParser;
 
 public static class AbsolutizeFunctions
 {
+    /// <summary>
+    ///  Converts relative path commands to absolute path commands.
+    /// </summary>
+    /// <param name="segments">The list of segments to convert.</param>
+    /// <returns>A new list of segments with all relative commands converted to absolute commands.</returns>
     public static List<Segment> Absolutize(this List<Segment> segments)
     {
         double cx = 0, cy = 0;
