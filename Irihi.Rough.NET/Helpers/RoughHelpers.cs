@@ -31,7 +31,7 @@ public static class RoughHelpers
         return Fillers[options.FillStyle];
     }
     
-    internal static List<HuskaLine> PolygonHachureLines(List<List<PointF>> polygonList, ResolvedOptions o)
+    internal static List<RoughLine> PolygonHachureLines(List<List<PointF>> polygonList, ResolvedOptions o)
     {
         var angle = o.HachureAngle + 90;
         var gap = o.HachureGap;

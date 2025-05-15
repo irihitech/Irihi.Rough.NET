@@ -23,7 +23,7 @@ public class HachureFiller(IRoughRenderer helper) : IPatternFiller
         return new OpSet { Type = OpSetType.FillSketch, Ops = ops };
     }
 
-    protected List<Op> RenderLines(List<HuskaLine> lines, ResolvedOptions options)
+    protected List<Op> RenderLines(List<RoughLine> lines, ResolvedOptions options)
     {
         List<Op> ops = [];
         foreach (var line in lines)

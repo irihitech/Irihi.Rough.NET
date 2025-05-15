@@ -20,7 +20,7 @@ public static class HachureFillFunctions
         }
     }
     
-    private static void RotateLines(IList<HuskaLine> lines, PointF center, double degree)
+    private static void RotateLines(IList<RoughLine> lines, PointF center, double degree)
     {
         var (cx, cy) = (center.X, center.Y);
         var angle = Math.PI / 180.0 * degree;
@@ -31,14 +31,14 @@ public static class HachureFillFunctions
             var line = lines[i];
             var (x1, y1) = (line.Start.X, line.Start.Y);
             var (x2, y2) = (line.End.X, line.End.Y);
-            lines[i] = new HuskaLine(
+            lines[i] = new RoughLine(
                 PointFHelper.Create((x1 - cx) * cos - (y1 - cy) * sin + cx, (x1 - cx) * sin + (y1 - cy) * cos + cy),
                 PointFHelper.Create((x2 - cx) * cos - (y2 - cy) * sin + cx, (x2 - cx) * sin + (y2 - cy) * cos + cy)
             );
         }
     }
 
-    private static List<HuskaLine> StraightHachureLines(IList<List<PointF>> polygons, double gap,
+    private static List<RoughLine> StraightHachureLines(IList<List<PointF>> polygons, double gap,
         double hachureStepOffset)
     {
         List<List<PointF>> vertexArray = [];
@@ -49,7 +49,7 @@ public static class HachureFillFunctions
             if (vertices.Count > 2) vertexArray.Add(vertices);
         }
 
-        List<HuskaLine> lines = [];
+        List<RoughLine> lines = [];
         gap = Math.Max(gap, 0.1);
 
         List<EdgeEntry> edges = [];
@@ -127,7 +127,7 @@ public static class HachureFillFunctions
                         if (next >= activeEdges.Count) break;
                         var ce = activeEdges[i].Edge;
                         var ne = activeEdges[next].Edge;
-                        lines.Add(new HuskaLine(PointFHelper.Create(Math.Round(ce.X), y), PointFHelper.Create(Math.Round(ne.X), y)));
+                        lines.Add(new RoughLine(PointFHelper.Create(Math.Round(ce.X), y), PointFHelper.Create(Math.Round(ne.X), y)));
                     }
 
             y += hachureStepOffset;
@@ -144,7 +144,7 @@ public static class HachureFillFunctions
         return lines;
     }
 
-    internal static List<HuskaLine> HachureLines(IList<List<PointF>> polygons, double hachureGap,
+    internal static List<RoughLine> HachureLines(IList<List<PointF>> polygons, double hachureGap,
         double hachureAngle,
         double hachureStepOffset = 1)
     {

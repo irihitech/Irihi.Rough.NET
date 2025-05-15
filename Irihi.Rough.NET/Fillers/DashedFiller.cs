@@ -17,7 +17,7 @@ public class DashedFiller(IRoughRenderer helper) : IPatternFiller
         return new OpSet { Type = OpSetType.FillSketch, Ops = DashedLine(lines, options) };
     }
 
-    private List<Op> DashedLine(List<HuskaLine> lines, ResolvedOptions o)
+    private List<Op> DashedLine(List<RoughLine> lines, ResolvedOptions o)
     {
         var offset = o.DashOffset < 0 ? o.HachureGap < 0 ? o.StrokeWidth * 4 : o.HachureGap : o.DashOffset;
         var gap = o.DashGap < 0 ? o.HachureGap < 0 ? o.StrokeWidth * 4 : o.HachureGap : o.DashGap;

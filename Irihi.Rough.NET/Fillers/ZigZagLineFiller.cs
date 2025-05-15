@@ -21,7 +21,7 @@ public class ZigZagLineFiller(IRoughRenderer helper) : IPatternFiller
         return new OpSet { Type = OpSetType.FillSketch, Ops = ZigZagLines(lines, zo, o) };
     }
 
-    private List<Op> ZigZagLines(List<HuskaLine> lines, double zo, ResolvedOptions o)
+    private List<Op> ZigZagLines(List<RoughLine> lines, double zo, ResolvedOptions o)
     {
         List<Op> ops = [];
         lines.ForEach(line =>

@@ -19,7 +19,7 @@ public class DotFiller(IRoughRenderer helper) : IPatternFiller
         return DotsOnLines(lines, o);
     }
 
-    private OpSet DotsOnLines(List<HuskaLine> lines, ResolvedOptions o)
+    private OpSet DotsOnLines(List<RoughLine> lines, ResolvedOptions o)
     {
         List<Op> ops = [];
         var gap = o.HachureGap;
