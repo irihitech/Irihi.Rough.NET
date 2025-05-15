@@ -8,6 +8,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "benchmark", "benchmark", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Irihi.Rough.NET", "Irihi.Rough.NET\Irihi.Rough.NET.csproj", "{C2389A67-B394-4B75-9625-B2790B5AA014}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest", "test\UnitTest\UnitTest.csproj", "{DD8565D3-9E53-4BB4-BAA2-70D06DFDF6C6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,12 @@ Global
 		{C2389A67-B394-4B75-9625-B2790B5AA014}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C2389A67-B394-4B75-9625-B2790B5AA014}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C2389A67-B394-4B75-9625-B2790B5AA014}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD8565D3-9E53-4BB4-BAA2-70D06DFDF6C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD8565D3-9E53-4BB4-BAA2-70D06DFDF6C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD8565D3-9E53-4BB4-BAA2-70D06DFDF6C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD8565D3-9E53-4BB4-BAA2-70D06DFDF6C6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{DD8565D3-9E53-4BB4-BAA2-70D06DFDF6C6} = {2C52F323-EB1C-4FC1-85AF-667B04EBFBC2}
 	EndGlobalSection
 EndGlobal

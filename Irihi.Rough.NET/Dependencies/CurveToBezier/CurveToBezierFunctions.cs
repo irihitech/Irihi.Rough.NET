@@ -79,7 +79,7 @@ public static class CurveToBezierFunctions
     /// <param name="t">The interpolation factor. A value of 0 returns point a, while a value of 1 returns point b.</param>
     /// <returns> The interpolated point.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static PointF Lerp(PointF a, PointF b, double t)
+    internal static PointF Lerp(PointF a, PointF b, double t)
     {
         return PointFHelper.Create(a.X + (b.X - a.X) * t, a.Y + (b.Y - a.Y) * t);
     }
@@ -91,7 +91,7 @@ public static class CurveToBezierFunctions
     /// <param name="v">The start point of the line segment.</param>
     /// <param name="w">The end point of the line segment.</param>
     /// <returns> The squared distance from point p to the line segment vw.</returns>
-    private static double DistanceToSegmentSquared(PointF p, PointF v, PointF w)
+    internal static double DistanceToSegmentSquared(PointF p, PointF v, PointF w)
     {
         var l2 = PointFHelper.DistanceSquared(v, w);
         if (l2 == 0) return PointFHelper.DistanceSquared(p, v);

@@ -23,7 +23,7 @@ public static class PathDataParserFunctions
         { 'Q', 4 }, { 'S', 4 }, { 'T', 2 }, { 'V', 1 }, { 'Z', 0 }
     };
 
-    private static List<PathToken> Tokenize(string d)
+    internal static List<PathToken> Tokenize(string d)
     {
         List<PathToken> tokens = [];
         var span = d.AsSpan();

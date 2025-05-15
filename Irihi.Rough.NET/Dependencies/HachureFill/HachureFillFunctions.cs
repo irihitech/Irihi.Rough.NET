@@ -6,7 +6,7 @@ namespace Irihi.Rough.NET.Dependencies.HachureFill;
 
 public static class HachureFillFunctions
 {
-    private static void RotatePoints(IList<PointF> points, PointF center, double degree)
+    internal static void RotatePoints(IList<PointF> points, PointF center, double degree)
     {
         var (cx, cy) = (center.X, center.Y);
         var angle = Math.PI / 180.0 * degree;
@@ -20,7 +20,7 @@ public static class HachureFillFunctions
         }
     }
     
-    private static void RotateLines(IList<RoughLine> lines, PointF center, double degree)
+    internal static void RotateLines(IList<RoughLine> lines, PointF center, double degree)
     {
         var (cx, cy) = (center.X, center.Y);
         var angle = Math.PI / 180.0 * degree;
