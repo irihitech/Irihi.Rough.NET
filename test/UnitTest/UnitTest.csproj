@@ -21,7 +21,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\Irihi.Rough.NET\Irihi.Rough.NET.csproj"/>
+        <ProjectReference Include="..\..\src\Irihi.Rough.NET\Irihi.Rough.NET.csproj"/>
     </ItemGroup>
 
 </Project>
