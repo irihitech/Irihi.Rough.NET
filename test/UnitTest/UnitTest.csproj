@@ -24,4 +24,8 @@
         <ProjectReference Include="..\..\src\Irihi.Rough.NET\Irihi.Rough.NET.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Content Include="bin\Debug\net8.0\TestOutput\*.svg" />
+    </ItemGroup>
+
 </Project>
