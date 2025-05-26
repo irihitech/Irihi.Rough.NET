@@ -1,0 +1,34 @@
+name: Pack Nightly
+
+on:
+  workflow_dispatch:
+
+jobs:
+  Pack_Nightly:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.1.1
+
+      - name: Get Version
+        run: |
+          VERSION_TIMESTAMP=$(date +'%Y%m%d%H%M%S')
+          VERSION="${{ github.event.inputs.Version_Prefix }}-nightly-${VERSION_TIMESTAMP}"
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Pack Irihi.Rough.NET
+        run: dotnet pack src/Irihi.Rough.NET -o nugets /p:Version=${{ env.VERSION }}
+
+      - name: Add NuGet Source
+        run: dotnet nuget add source ${{ secrets.IRIHI_NUGET_NIGHTLY_FEED }} -n irihi.tech -u ${{ secrets.IRIHI_NUGET_USERNAME }} -p ${{ secrets.IRIHI_NUGET_PASSWORD }} --store-password-in-clear-text
+
+      - name: Publish Nightly Package
+        run: dotnet nuget push "./nugets/*.nupkg" --api-key ${{ secrets.IRIHI_NUGET_API_KEY }} --source irihi.tech --skip-duplicate
+
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v4.3.1
+        with:
+          name: nugets
+          path: ./nugets
+        if: always()

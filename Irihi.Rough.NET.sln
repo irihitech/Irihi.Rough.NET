@@ -10,6 +10,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Irihi.Rough.NET", "src\Irih
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest", "test\UnitTest\UnitTest.csproj", "{DD8565D3-9E53-4BB4-BAA2-70D06DFDF6C6}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GitHub Action", "GitHub Action", "{A2438633-05B4-4FDB-B28A-0BAC89940510}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\pack.yml = .github\workflows\pack.yml
+		.github\workflows\pack-nightly.yml = .github\workflows\pack-nightly.yml
+		.github\workflows\release-tag.yml = .github\workflows\release-tag.yml
+		.github\workflows\test.yml = .github\workflows\test.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
