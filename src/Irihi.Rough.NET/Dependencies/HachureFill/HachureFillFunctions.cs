@@ -103,7 +103,7 @@ public static class HachureFillFunctions
                     ix = i;
                 }
 
-                var removed = edges[..(ix + 1)].ToList();
+                var removed = edges.GetRange(0, ix + 1);
                 activeEdges.AddRange(removed.Select(edge => new ActiveEdgeEntry { S = y, Edge = edge }));
                 edges.RemoveRange(0, ix + 1);
             }
