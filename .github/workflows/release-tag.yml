@@ -17,11 +17,15 @@ jobs:
       - name: Pack Irihi.Rough.NET
         run: dotnet pack src/Irihi.Rough.NET -o nugets
 
+      - name: Publish NuGet package
+        run: dotnet nuget push "./nugets/*.nupkg" --api-key ${{ secrets.NUGET_ORG_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v4
         with:
           name: nugets
           path: ./nugets
+        if: always()
 
   draft-release:
     needs: [ pack ]
