@@ -4,7 +4,7 @@
         <TargetFramework>net6.0</TargetFramework>
         <Nullable>enable</Nullable>
         <LangVersion>latest</LangVersion>
-        <Version>0.0.1</Version>
+        <Version>1.0.0-beta1</Version>
         <Authors>IRIHI Technology Co., Ltd.</Authors>
         <Description>Roughjs for .NET</Description>
         <RepositoryUrl>https://github.com/irihitech/Irihi.Rough.NET</RepositoryUrl>
