@@ -25,7 +25,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="bin\Debug\net8.0\TestOutput\*.svg" />
+        <Content Include="bin\Debug\net8.0\output\*.svg" Link="output\svg\*.svg"/>
     </ItemGroup>
 
 </Project>

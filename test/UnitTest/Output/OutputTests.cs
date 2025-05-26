@@ -26,7 +26,7 @@ public class OutputTests
             sb.Append(opSet.Geometry);
         }
 
-        var outputDirectory = Path.Combine(Directory.GetCurrentDirectory(), "TestOutput");
+        var outputDirectory = Path.Combine(Directory.GetCurrentDirectory(), "output", "svg");
         Directory.CreateDirectory(outputDirectory);
 
         var filePath = Path.Combine(outputDirectory, "icon.svg");
@@ -59,7 +59,7 @@ public class OutputTests
             sb.Append(opSet.Geometry);
         }
 
-        var outputDirectory = Path.Combine(Directory.GetCurrentDirectory(), "TestOutput");
+        var outputDirectory = Path.Combine(Directory.GetCurrentDirectory(), "output", "svg");
         Directory.CreateDirectory(outputDirectory);
 
         var filePath = Path.Combine(outputDirectory, "rect.svg");
