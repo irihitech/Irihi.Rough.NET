@@ -3,11 +3,24 @@ using System.Text.RegularExpressions;
 
 namespace Irihi.Rough.NET.Dependencies.PathDataParser;
 
-internal static class RegexHelper
+internal partial class RegexHelper
 {
+    #if NET6_0
     internal static readonly Regex WhiteSpaceRegex = new(@"^([ \t\r\n,]+)", RegexOptions.Compiled);
     internal static readonly Regex CommandRegex = new(@"^([aAcChHlLmMqQsStTvVzZ])", RegexOptions.Compiled);
     internal static readonly Regex NumberRegex = new(@"^(([-+]?[0-9]+(\.[0-9]*)?|[-+]?\.[0-9]+)([eE][-+]?[0-9]+)?)", RegexOptions.Compiled);
+    #endif
+    
+    #if NET8_0_OR_GREATER
+    [GeneratedRegex(@"^([ \t\r\n,]+)")]
+    internal static partial Regex WhiteSpaceRegex();
+    
+    [GeneratedRegex(@"^([aAcChHlLmMqQsStTvVzZ])")]
+    internal static partial Regex CommandRegex();
+
+    [GeneratedRegex(@"^(([-+]?[0-9]+(\.[0-9]*)?|[-+]?\.[0-9]+)([eE][-+]?[0-9]+)?)")]
+    internal static partial Regex NumberRegex();
+    #endif
 }
 
 public static class PathDataParserFunctions
@@ -25,6 +38,7 @@ public static class PathDataParserFunctions
 
         while (span.Length > 0)
         {
+#if NET6_0
             var spanStr = span.ToString();
             if (RegexHelper.WhiteSpaceRegex.IsMatch(spanStr))
             {
@@ -56,6 +70,43 @@ public static class PathDataParserFunctions
             {
                 return [];
             }
+#endif
+            
+#if NET8_0
+    if (RegexHelper.WhiteSpaceRegex().IsMatch(span))
+            {
+                foreach (var match in RegexHelper.WhiteSpaceRegex().EnumerateMatches(span))
+                {
+                    if (match.Length == 0) continue;
+                    span = span.Slice(match.Length);
+                    break;
+                }
+            }
+            else if (RegexHelper.CommandRegex().IsMatch(span))
+            {
+                foreach (var match in RegexHelper.CommandRegex().EnumerateMatches(span))
+                {
+                    if (match.Length == 0) continue;
+                    tokens.Add(new PathToken(TokenType.Command, span.Slice(match.Index, match.Length).ToString()));
+                    span = span.Slice(match.Length);
+                    break;
+                }
+            }
+            else if (RegexHelper.NumberRegex().IsMatch(span))
+            {
+                foreach (var match in RegexHelper.NumberRegex().EnumerateMatches(span))
+                {
+                    if (match.Length == 0) continue;
+                    tokens.Add(new PathToken(TokenType.Number, span.Slice(match.Index, match.Length).ToString()));
+                    span = span.Slice(match.Length);
+                    break;
+                }
+            }
+            else
+            {
+                return new List<PathToken>();
+            }
+#endif
         }
 
         tokens.Add(PathToken.End);
