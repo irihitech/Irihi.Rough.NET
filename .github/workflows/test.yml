@@ -21,5 +21,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4.1.1
-      - name: Unit Test
-        run: dotnet test test/UnitTest
+      - name: Unit Test with Coverage
+        run: dotnet test test/UnitTest --collect:"XPlat Code Coverage" --results-directory ./coverage
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4.6.0
+        with:
+          directory: ./coverage
+          fail_ci_if_error: false
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
