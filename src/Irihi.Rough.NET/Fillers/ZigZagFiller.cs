@@ -20,7 +20,7 @@ public class ZigZagFiller(IRoughRenderer helper) : HachureFiller(helper)
         o2.HachureGap = gap;
         var lines = RoughHelpers.PolygonHachureLines(polygonList, o2);
         var zigZagAngle = Math.PI / 180 * o.HachureAngle;
-        List<RoughLine> zigzagLines = [];
+        List<RoughLine> zigzagLines = new(lines.Count * 2);
         var dgx = gap * 0.5 * Math.Cos(zigZagAngle);
         var dgy = gap * 0.5 * Math.Sin(zigZagAngle);
         foreach (var line in lines)

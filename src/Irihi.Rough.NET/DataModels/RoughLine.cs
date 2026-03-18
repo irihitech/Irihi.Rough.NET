@@ -9,5 +9,13 @@ namespace Irihi.Rough.NET.DataModels;
 /// <param name="End"></param>
 public readonly record struct RoughLine(PointF Start, PointF End)
 {
-    public double Length => Math.Sqrt(Math.Pow(End.X - Start.X, 2) + Math.Pow(End.Y - Start.Y, 2));
+    public double Length
+    {
+        get
+        {
+            var dx = End.X - Start.X;
+            var dy = End.Y - Start.Y;
+            return Math.Sqrt(dx * dx + dy * dy);
+        }
+    }
 }
