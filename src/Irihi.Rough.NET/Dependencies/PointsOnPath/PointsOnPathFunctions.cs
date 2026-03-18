@@ -41,7 +41,7 @@ public static class PointsOnPathFunctions
                     if (pendingCurve.Count == 0)
                     {
                         var lastPoint = currentPoints.Count != 0 ? currentPoints[^1] : start;
-                        pendingCurve.Add(lastPoint.Clone());
+                        pendingCurve.Add(lastPoint);
                     }
 
                     pendingCurve.Add(PointFHelper.Create(data[0], data[1]));
@@ -50,7 +50,7 @@ public static class PointsOnPathFunctions
                     break;
                 case 'Z':
                     AppendPendingCurve();
-                    currentPoints.Add(start.Clone());
+                    currentPoints.Add(start);
                     break;
             }
         }

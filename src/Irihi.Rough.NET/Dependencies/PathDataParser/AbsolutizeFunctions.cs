@@ -43,8 +43,14 @@ public static class AbsolutizeFunctions
                     cy = segment.Data[5];
                     break;
                 case 'c':
-                    var newCurveData = segment.Data.Select((d, i) => i % 2 == 1 ? d + cy : d + cx).ToArray();
-                    output.Add(new Segment('C', newCurveData));
+#pragma warning disable CA2014 // Stackalloc size is small and fixed (6 doubles = 48 bytes)
+                    Span<double> newCurveData = stackalloc double[6];
+#pragma warning restore CA2014
+                    for (var i = 0; i < 6; i++)
+                    {
+                        newCurveData[i] = segment.Data[i] + (i % 2 == 1 ? cy : cx);
+                    }
+                    output.Add(new Segment('C', newCurveData.ToArray()));
                     cx = newCurveData[4];
                     cy = newCurveData[5];
                     break;
@@ -54,8 +60,14 @@ public static class AbsolutizeFunctions
                     cy = segment.Data[3];
                     break;
                 case 'q':
-                    var newQuadData = segment.Data.Select((d, i) => i % 2 == 1 ? d + cy : d + cx).ToArray();
-                    output.Add(new Segment('Q', newQuadData));
+#pragma warning disable CA2014 // Stackalloc size is small and fixed (4 doubles = 32 bytes)
+                    Span<double> newQuadData = stackalloc double[4];
+#pragma warning restore CA2014
+                    for (var i = 0; i < 4; i++)
+                    {
+                        newQuadData[i] = segment.Data[i] + (i % 2 == 1 ? cy : cx);
+                    }
+                    output.Add(new Segment('Q', newQuadData.ToArray()));
                     cx = newQuadData[2];
                     cy = newQuadData[3];
                     break;
@@ -94,8 +106,14 @@ public static class AbsolutizeFunctions
                     cy = segment.Data[3];
                     break;
                 case 's':
-                    var newSmoothData = segment.Data.Select((d, i) => i % 2 == 1 ? d + cy : d + cx).ToArray();
-                    output.Add(new Segment('S', newSmoothData));
+#pragma warning disable CA2014 // Stackalloc size is small and fixed (4 doubles = 32 bytes)
+                    Span<double> newSmoothData = stackalloc double[4];
+#pragma warning restore CA2014
+                    for (var i = 0; i < 4; i++)
+                    {
+                        newSmoothData[i] = segment.Data[i] + (i % 2 == 1 ? cy : cx);
+                    }
+                    output.Add(new Segment('S', newSmoothData.ToArray()));
                     cx = newSmoothData[2];
                     cy = newSmoothData[3];
                     break;

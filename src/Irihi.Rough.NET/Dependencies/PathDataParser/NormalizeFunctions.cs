@@ -128,10 +128,11 @@ public static class NormalizeFunctions
         if (recursive != null)
         {
             List<double[]> temp = [m2, m3, m4];
-            return temp.Concat(curves).ToList();
+            temp.AddRange(curves);
+            return temp;
         }
 
-        curves = new List<double[]> { m2, m3, m4 }.Concat(curves).ToList();
+        curves.InsertRange(0, new[] { m2, m3, m4 });
 
         List<double[]> result = [];
         for (var i = 0; i < curves.Count; i += 3)

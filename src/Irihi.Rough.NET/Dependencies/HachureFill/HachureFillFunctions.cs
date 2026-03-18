@@ -1,4 +1,5 @@
 using System.Drawing;
+using System.Runtime.CompilerServices;
 using Irihi.Rough.NET.DataModels;
 using Irihi.Rough.NET.Helpers;
 
@@ -6,6 +7,7 @@ namespace Irihi.Rough.NET.Dependencies.HachureFill;
 
 public static class HachureFillFunctions
 {
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static void RotatePoints(IList<PointF> points, PointF center, double degree)
     {
         var (cx, cy) = (center.X, center.Y);
@@ -19,7 +21,8 @@ public static class HachureFillFunctions
             points[index] = PointFHelper.Create((x - cx) * cos - (y - cy) * sin + cx, (x - cx) * sin + (y - cy) * cos + cy);
         }
     }
-    
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static void RotateLines(IList<RoughLine> lines, PointF center, double degree)
     {
         var (cx, cy) = (center.X, center.Y);
@@ -108,7 +111,7 @@ public static class HachureFillFunctions
                 edges.RemoveRange(0, ix + 1);
             }
 
-            activeEdges = activeEdges.Where(a => a.Edge.YMax > y).ToList();
+            activeEdges.RemoveAll(a => a.Edge.YMax <= y);
 
             activeEdges.Sort((ae1, ae2) =>
             {
