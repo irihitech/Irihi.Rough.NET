@@ -41,7 +41,7 @@ public static class PointsOnPathFunctions
                     if (pendingCurve.Count == 0)
                     {
                         var lastPoint = currentPoints.Count != 0 ? currentPoints[^1] : start;
-                        pendingCurve.Add(lastPoint.Clone());
+                        pendingCurve.Add(lastPoint);
                     }
 
                     pendingCurve.Add(PointFHelper.Create(data[0], data[1]));
@@ -50,19 +50,19 @@ public static class PointsOnPathFunctions
                     break;
                 case 'Z':
                     AppendPendingCurve();
-                    currentPoints.Add(start.Clone());
+                    currentPoints.Add(start);
                     break;
             }
         }
 
         AppendPendingPoints();
 
-        if (distance != 0) return sets;
+        if (distance == null || distance == 0) return sets;
 
         List<List<PointF>> result = [];
         foreach (var set in sets)
         {
-            var simplifiedSet = CurveToBezierFunctions.Simplify(set, distance ?? 1);
+            var simplifiedSet = CurveToBezierFunctions.Simplify(set, distance.Value);
             if (simplifiedSet.Count != 0) result.Add(simplifiedSet);
         }
 

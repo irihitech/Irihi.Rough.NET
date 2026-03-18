@@ -46,7 +46,7 @@ public static class CurveToBezierFunctions
 
             Span<PointF> b = stackalloc PointF[4];
             var s = 1 - curveTightness;
-            output.Add(points[0].Clone());
+            output.Add(points[0]);
 
             for (var i = 1; i + 2 < points.Count; i++)
             {
@@ -215,7 +215,7 @@ public static class CurveToBezierFunctions
         }
 
         // if that point is too far, split
-        if (Math.Sqrt(maxDistSq) > epsilon)
+        if (maxDistSq > epsilon * epsilon)
         {
             SimplifyPoints(points, start, maxNdx + 1, epsilon, outPoints);
             SimplifyPoints(points, maxNdx, end, epsilon, outPoints);

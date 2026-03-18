@@ -43,7 +43,11 @@ public static class AbsolutizeFunctions
                     cy = segment.Data[5];
                     break;
                 case 'c':
-                    var newCurveData = segment.Data.Select((d, i) => i % 2 == 1 ? d + cy : d + cx).ToArray();
+                    var newCurveData = new double[segment.Data.Length];
+                    for (var i = 0; i < segment.Data.Length; i++)
+                    {
+                        newCurveData[i] = segment.Data[i] + (i % 2 == 1 ? cy : cx);
+                    }
                     output.Add(new Segment('C', newCurveData));
                     cx = newCurveData[4];
                     cy = newCurveData[5];
@@ -54,7 +58,11 @@ public static class AbsolutizeFunctions
                     cy = segment.Data[3];
                     break;
                 case 'q':
-                    var newQuadData = segment.Data.Select((d, i) => i % 2 == 1 ? d + cy : d + cx).ToArray();
+                    var newQuadData = new double[segment.Data.Length];
+                    for (var i = 0; i < segment.Data.Length; i++)
+                    {
+                        newQuadData[i] = segment.Data[i] + (i % 2 == 1 ? cy : cx);
+                    }
                     output.Add(new Segment('Q', newQuadData));
                     cx = newQuadData[2];
                     cy = newQuadData[3];
@@ -94,7 +102,11 @@ public static class AbsolutizeFunctions
                     cy = segment.Data[3];
                     break;
                 case 's':
-                    var newSmoothData = segment.Data.Select((d, i) => i % 2 == 1 ? d + cy : d + cx).ToArray();
+                    var newSmoothData = new double[segment.Data.Length];
+                    for (var i = 0; i < segment.Data.Length; i++)
+                    {
+                        newSmoothData[i] = segment.Data[i] + (i % 2 == 1 ? cy : cx);
+                    }
                     output.Add(new Segment('S', newSmoothData));
                     cx = newSmoothData[2];
                     cy = newSmoothData[3];
