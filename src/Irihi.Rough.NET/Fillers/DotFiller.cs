@@ -36,6 +36,7 @@ public class DotFiller(IRoughRenderer helper) : IPatternFiller
         }
 
         var ro = gap / 4;
+        var twoRo = 2 * ro;
         foreach (var line in lines)
         {
             var length = line.Length;
@@ -44,12 +45,13 @@ public class DotFiller(IRoughRenderer helper) : IPatternFiller
             var offset = length - (count * gap);
             var x = ((line.Start.X + line.End.X) / 2) - (gap / 4);
             var minY = Math.Min(line.Start.Y, line.End.Y);
+            var xMinusRo = x - ro;
 
             for (var i = 0; i < count; i++)
             {
                 var y = minY + offset + (i * gap);
-                var cx = (x - ro) + MathHelper.Random() * 2 * ro;
-                var cy = (y - ro) + MathHelper.Random() * 2 * ro;
+                var cx = xMinusRo + MathHelper.Random() * twoRo;
+                var cy = (y - ro) + MathHelper.Random() * twoRo;
                 var el = helper.Ellipse(cx, cy, fweight, fweight, o);
                 ops.AddRange(el.Ops);
             }

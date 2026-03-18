@@ -24,10 +24,12 @@ public class ZigZagLineFiller(IRoughRenderer helper) : IPatternFiller
     private List<Op> ZigZagLines(List<RoughLine> lines, double zo, ResolvedOptions o)
     {
         List<Op> ops = [];
-        lines.ForEach(line =>
+        var twoZo = 2 * zo;
+        var dz = zo * Math.Sqrt(2);
+        foreach (var line in lines)
         {
             var length = line.Length;
-            var count = Math.Round(length / (2 * zo));
+            var count = Math.Round(length / twoZo);
             var p1 = line.Start;
             var p2 = line.End;
             if (p1.X > p2.X)
@@ -37,19 +39,22 @@ public class ZigZagLineFiller(IRoughRenderer helper) : IPatternFiller
             }
 
             var alpha = Math.Atan((p2.Y - p1.Y) / (p2.X - p1.X));
+            var cosAlpha = Math.Cos(alpha);
+            var sinAlpha = Math.Sin(alpha);
+            var cosAlphaPi4 = Math.Cos(alpha + Math.PI / 4);
+            var sinAlphaPi4 = Math.Sin(alpha + Math.PI / 4);
             for (var i = 0; i < count; i++)
             {
-                var lstart = i * 2 * zo;
-                var lend = (i + 1) * 2 * zo;
-                var dz = Math.Sqrt(2 * Math.Pow(zo, 2));
-                var start = PointFHelper.Create(p1.X + lstart * Math.Cos(alpha), p1.Y + lstart * Math.Sin(alpha));
-                var end = PointFHelper.Create(p1.X + lend * Math.Cos(alpha), p1.Y + lend * Math.Sin(alpha));
-                var middle = PointFHelper.Create(start.X + dz * Math.Cos(alpha + Math.PI / 4),
-                    start.Y + dz * Math.Sin(alpha + Math.PI / 4));
+                var lstart = i * twoZo;
+                var lend = lstart + twoZo;
+                var start = PointFHelper.Create(p1.X + lstart * cosAlpha, p1.Y + lstart * sinAlpha);
+                var end = PointFHelper.Create(p1.X + lend * cosAlpha, p1.Y + lend * sinAlpha);
+                var middle = PointFHelper.Create(start.X + dz * cosAlphaPi4,
+                    start.Y + dz * sinAlphaPi4);
                 ops.AddRange(helper.DoubleLineOps(start.X, start.Y, middle.X, middle.Y, o));
                 ops.AddRange(helper.DoubleLineOps(middle.X, middle.Y, end.X, end.Y, o));
             }
-        });
+        }
         return ops;
     }
 }

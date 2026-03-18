@@ -21,12 +21,13 @@ public class DashedFiller(IRoughRenderer helper) : IPatternFiller
     {
         var offset = o.DashOffset < 0 ? o.HachureGap < 0 ? o.StrokeWidth * 4 : o.HachureGap : o.DashOffset;
         var gap = o.DashGap < 0 ? o.HachureGap < 0 ? o.StrokeWidth * 4 : o.HachureGap : o.DashGap;
+        var step = offset + gap;
         List<Op> ops = [];
         foreach (var line in lines)
         {
             var length = line.Length;
-            var count = Math.Floor(length / (offset + gap));
-            var startOffset = (length + gap - count * (offset + gap)) / 2;
+            var count = Math.Floor(length / step);
+            var startOffset = (length + gap - count * step) / 2;
             var p1 = line.Start;
             var p2 = line.End;
             if (p1.X > p2.X)
@@ -36,14 +37,18 @@ public class DashedFiller(IRoughRenderer helper) : IPatternFiller
             }
 
             var alpha = Math.Atan((p2.Y - p1.Y) / (p2.X - p1.X));
+            var cosAlpha = Math.Cos(alpha);
+            var sinAlpha = Math.Sin(alpha);
+            var startOffsetCos = startOffset * cosAlpha;
+            var startOffsetSin = startOffset * sinAlpha;
             for (var i = 0; i < count; i++)
             {
-                var lstart = i * (offset + gap);
+                var lstart = i * step;
                 var lend = lstart + offset;
-                var start = PointFHelper.Create(p1.X + lstart * Math.Cos(alpha) + startOffset * Math.Cos(alpha),
-                    p1.Y + lstart * Math.Sin(alpha) + startOffset * Math.Sin(alpha));
-                var end = PointFHelper.Create(p1.X + lend * Math.Cos(alpha) + startOffset * Math.Cos(alpha),
-                    p1.Y + lend * Math.Sin(alpha) + startOffset * Math.Sin(alpha));
+                var start = PointFHelper.Create(p1.X + lstart * cosAlpha + startOffsetCos,
+                    p1.Y + lstart * sinAlpha + startOffsetSin);
+                var end = PointFHelper.Create(p1.X + lend * cosAlpha + startOffsetCos,
+                    p1.Y + lend * sinAlpha + startOffsetSin);
                 ops.AddRange(helper.DoubleLineOps(start.X, start.Y, end.X, end.Y, o));
             }
         }
