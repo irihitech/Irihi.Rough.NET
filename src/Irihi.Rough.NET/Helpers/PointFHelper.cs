@@ -11,16 +11,19 @@ public static class PointFHelper
         return new PointF(p.X, p.Y);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static PointF Create(double x, double y)
     {
         return new PointF((float)x, (float)y);
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static double Distance(PointF p1, PointF p2)
     {
         return Math.Sqrt(DistanceSquared(p1, p2));
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static double DistanceSquared(PointF p1, PointF p2)
     {
         var dx = p2.X - p1.X;

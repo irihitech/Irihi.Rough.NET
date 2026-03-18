@@ -27,7 +27,11 @@ public static class RendererHelper
         var o1 = Line(x1, y1, x2, y2, o, true, false);
         if (singleStroke) return o1;
         var o2 = Line(x1, y1, x2, y2, o, true, true);
-        return o1.Concat(o2).ToList();
+        // Preallocate capacity for better performance
+        var result = new List<Op>(o1.Count + o2.Count);
+        result.AddRange(o1);
+        result.AddRange(o2);
+        return result;
     }
     
     internal static List<Op> DoubleLineFillOps(double x1, double y1, double x2, double y2, ResolvedOptions options)
@@ -37,7 +41,9 @@ public static class RendererHelper
 
     private static List<Op> Line(double x1, double y1, double x2, double y2, ResolvedOptions o, bool move, bool overlay)
     {
-        var lengthSq = Math.Pow(x1 - x2, 2) + Math.Pow(y1 - y2, 2);
+        var dx = x1 - x2;
+        var dy = y1 - y2;
+        var lengthSq = dx * dx + dy * dy;
         var length = Math.Sqrt(lengthSq);
         double roughnessGain;
         if (length < 200)
@@ -228,7 +234,11 @@ public static class RendererHelper
                 }
             }
 
-            return new OpSet { Type = OpSetType.Path, Ops = [..o1, ..o2] };
+            // Preallocate capacity for better performance
+            var combined = new List<Op>(o1.Count + o2.Count);
+            combined.AddRange(o1);
+            combined.AddRange(o2);
+            return new OpSet { Type = OpSetType.Path, Ops = combined };
         }
 
         return new OpSet { Type = OpSetType.Path, Ops = [] };
@@ -350,7 +360,11 @@ public static class RendererHelper
                 o);
             var ap2 = lists2[0];
             var o2 = Curve(ap2, null, o);
-            o1 = o1.Concat(o2).ToList();
+            // Preallocate capacity for better performance
+            var combined = new List<Op>(o1.Count + o2.Count);
+            combined.AddRange(o1);
+            combined.AddRange(o2);
+            o1 = combined;
         }
 
         return new EllipseResult
