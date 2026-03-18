@@ -1,4 +1,5 @@
 using System.Drawing;
+using System.Runtime.CompilerServices;
 using Irihi.Rough.NET.DataModels;
 using Irihi.Rough.NET.Dependencies.HachureFill;
 using Irihi.Rough.NET.Fillers;
@@ -37,16 +38,16 @@ public static class RoughHelpers
         var gap = o.HachureGap;
         if (gap < 0) gap = o.StrokeWidth * 4;
 
-        gap = Math.Round(Math.Max(gap, 0.1));
+        gap = Math.Max(gap, 0.1);
 
-        double? skipOffset = 1.0;
+        double skipOffset = 1.0;
         if (o.Roughness >= 1)
         {
-            // TODO Use accurate randomizer in project. 
+            // TODO Use accurate randomizer in project.
             var random = MathHelper.Random(o);
             if (random > 0.7) skipOffset = gap;
         }
 
-        return HachureFillFunctions.HachureLines(polygonList, gap, angle, skipOffset ?? 1);
+        return HachureFillFunctions.HachureLines(polygonList, gap, angle, skipOffset);
     }
 }

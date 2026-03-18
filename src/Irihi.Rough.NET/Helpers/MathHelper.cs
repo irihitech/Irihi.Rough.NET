@@ -29,7 +29,14 @@ public static class MathHelper
     /// <returns></returns>
     public static double Random(ResolvedOptions options)
     {
-        return options.Randomizer?.NextDouble() ?? new Random(options.Seed).NextDouble();
+        if (options.Randomizer is not null)
+        {
+            return options.Randomizer.NextDouble();
+        }
+
+        // Initialize the randomizer if it hasn't been set
+        options.Randomizer = new Random(options.Seed);
+        return options.Randomizer.NextDouble();
     }
 
     /// <summary>
