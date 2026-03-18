@@ -57,12 +57,12 @@ public static class PointsOnPathFunctions
 
         AppendPendingPoints();
 
-        if (distance == null || distance == 0) return sets;
+        if (distance != 0) return sets;
 
         List<List<PointF>> result = [];
         foreach (var set in sets)
         {
-            var simplifiedSet = CurveToBezierFunctions.Simplify(set, distance.Value);
+            var simplifiedSet = CurveToBezierFunctions.Simplify(set, distance ?? 1);
             if (simplifiedSet.Count != 0) result.Add(simplifiedSet);
         }
 
